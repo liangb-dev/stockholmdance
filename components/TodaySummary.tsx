@@ -163,7 +163,7 @@ export function TodaySummary() {
       </div>
       {payload ? (
         <p className="mt-1 text-[0.75rem] text-muted">
-          Updated {formatSyncedClock(payload.fetchedAt)}
+          Synced {formatSyncedClock(payload.fetchedAt)}
           {payload.events.length > 0
             ? ` · ${payload.events.length} event${payload.events.length === 1 ? "" : "s"}`
             : ""}
