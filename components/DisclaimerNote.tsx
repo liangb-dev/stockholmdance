@@ -9,7 +9,7 @@ export function DisclaimerNote() {
         </span>
         I use Claude to help manage my calendar so please double-check event
         official pages (time, price, dress code) before heading out. Use this
-        calendar as a reference unless you&apos;re entirely sure. Spotted
+        calendar predominantly as a reference. Spotted
         something wrong or missing?{" "}
         <a
           className="font-medium text-foreground underline underline-offset-2 hover:text-accent"
