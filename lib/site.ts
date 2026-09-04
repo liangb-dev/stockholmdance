@@ -7,6 +7,9 @@ export const CONTACT_EMAIL = "bernardxliang@gmail.com";
 
 export const CALENDAR_TIMEZONE = "Europe/Stockholm";
 
+/** How long the Google Calendar feed is reused before a background refresh. */
+export const CALENDAR_SYNC_SECONDS = 120;
+
 /** Public Google Calendar ID (group calendar). */
 export const CALENDAR_ID =
   "f00d88b1c055af51f91f2fae1e5e1d47c9f1ee65d33b5f3337e2fa91fc1e5c74@group.calendar.google.com";

@@ -1,6 +1,7 @@
 import { CalendarEmbed } from "@/components/CalendarEmbed";
 import { DisclaimerNote } from "@/components/DisclaimerNote";
 import { SubscribeButton } from "@/components/SubscribeButton";
+import { TodaySummary } from "@/components/TodaySummary";
 import { SITE_DESCRIPTION, SITE_KICKER, SITE_NAME } from "@/lib/site";
 
 export default function Home() {
@@ -15,6 +16,7 @@ export default function Home() {
       <p className="max-w-[34rem] text-[1.08rem] leading-relaxed text-muted">
         {SITE_DESCRIPTION}
       </p>
+      <TodaySummary />
       <CalendarEmbed />
       <SubscribeButton />
       <DisclaimerNote />
