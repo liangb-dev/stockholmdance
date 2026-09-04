@@ -1,5 +1,4 @@
 import { CalendarEmbed } from "@/components/CalendarEmbed";
-import { DisclaimerNote } from "@/components/DisclaimerNote";
 import { Logo } from "@/components/Logo";
 import { SubscribeButton } from "@/components/SubscribeButton";
 import { TodaySummary } from "@/components/TodaySummary";
@@ -40,8 +39,6 @@ export default function Home() {
 
         <CalendarEmbed />
       </div>
-
-      <DisclaimerNote />
     </main>
   );
 }

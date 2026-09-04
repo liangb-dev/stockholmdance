@@ -1,18 +1,24 @@
-import { CONTACT_EMAIL } from "@/lib/site";
+import { FEEDBACK_EMAIL } from "@/lib/site";
 
 export function DisclaimerNote() {
   return (
-    <footer className="mt-12 border-t border-border pt-6 text-sm leading-relaxed text-muted lg:mt-16">
-      I try to keep this accurate, but please double-check event details (time,
-      price, dress code) before heading out — organizers change things. Spotted
-      something wrong or missing? Let me know at{" "}
-      <a
-        className="font-medium text-foreground underline-offset-2 hover:text-accent hover:underline"
-        href={`mailto:${CONTACT_EMAIL}`}
-      >
-        {CONTACT_EMAIL}
-      </a>
-      .
-    </footer>
+    <aside className="border-b border-border bg-surface/80 px-4 py-3 text-sm leading-relaxed text-muted sm:px-6 lg:px-8">
+      <p className="mx-auto max-w-[1180px]">
+        <span className="mr-2 font-semibold tracking-[0.12em] text-gold uppercase">
+          Note
+        </span>
+        I use Claude to help manage my calendar so please double-check event
+        official pages (time, price, dress code) before heading out. Use this
+        calendar as a reference unless you&apos;re entirely sure. Spotted
+        something wrong or missing?{" "}
+        <a
+          className="font-medium text-foreground underline underline-offset-2 hover:text-accent"
+          href={`mailto:${FEEDBACK_EMAIL}`}
+        >
+          Let me know
+        </a>
+        .
+      </p>
+    </aside>
   );
 }

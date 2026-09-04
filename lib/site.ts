@@ -4,7 +4,7 @@ export const SITE_DESCRIPTION =
   "Drop-in classes. Packed socials. Parties people stay for. Bachata, salsa, and kizomba across the city — one calendar, less event-hunting.";
 export const DANCE_STYLES = ["Bachata", "Salsa", "Kizomba"] as const;
 
-export const CONTACT_EMAIL = "bernardxliang@gmail.com";
+export const FEEDBACK_EMAIL = "liangb.dev@gmail.com";
 
 export const CALENDAR_TIMEZONE = "Europe/Stockholm";
 

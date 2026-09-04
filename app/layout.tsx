@@ -1,7 +1,9 @@
 import type { Metadata } from "next";
 import { Figtree, Fraunces } from "next/font/google";
-import "./globals.css";
+import { DisclaimerNote } from "@/components/DisclaimerNote";
+import { SiteFooter } from "@/components/SiteFooter";
 import { SITE_DESCRIPTION, SITE_NAME } from "@/lib/site";
+import "./globals.css";
 
 const figtree = Figtree({
   variable: "--font-figtree",
@@ -26,8 +28,12 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       lang="en"
       className={`${figtree.variable} ${fraunces.variable} h-full antialiased`}
     >
-      <body className="min-h-full px-4 py-6 font-sans sm:px-6 sm:py-8 lg:px-8 lg:py-10">
-        {children}
+      <body className="flex min-h-full flex-col font-sans">
+        <DisclaimerNote />
+        <div className="flex-1 px-4 py-6 sm:px-6 sm:py-8 lg:px-8 lg:py-10">
+          {children}
+        </div>
+        <SiteFooter />
       </body>
     </html>
   );
