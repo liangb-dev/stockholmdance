@@ -2,6 +2,15 @@ import { CALENDAR_TIMEZONE } from "@/lib/site";
 
 export type TodayEventStatus = "past" | "now" | "upcoming";
 
+export type DanceKind = "bachata" | "salsa" | "kizomba" | "zouk";
+
+const DANCE_KIND_PATTERNS: [DanceKind, RegExp][] = [
+  ["bachata", /bachata/i],
+  ["salsa", /salsa|mambo/i],
+  ["kizomba", /kizomba/i],
+  ["zouk", /zouk/i],
+];
+
 export type TodayEvent = {
   id: string;
   title: string;
@@ -50,19 +59,36 @@ export function eventStatus(event: TodayEvent, now = new Date()): TodayEventStat
   return "upcoming";
 }
 
-export function formatEventTime(event: TodayEvent) {
-  if (event.isAllDay) {
-    return "All day";
-  }
-
-  const formatTime = new Intl.DateTimeFormat("sv-SE", {
+function formatClock(isoDate: string) {
+  return new Intl.DateTimeFormat("sv-SE", {
     timeZone: CALENDAR_TIMEZONE,
     hour: "2-digit",
     minute: "2-digit",
     hourCycle: "h23",
-  });
+  }).format(new Date(isoDate));
+}
 
-  return `${formatTime.format(new Date(event.start))}–${formatTime.format(new Date(event.end))}`;
+export function formatEventClocks(event: TodayEvent) {
+  if (event.isAllDay) {
+    return { start: "All day", end: "" };
+  }
+
+  return { start: formatClock(event.start), end: formatClock(event.end) };
+}
+
+export function eventKind(title: string): DanceKind | null {
+  let match: DanceKind | null = null;
+  let earliest = Number.POSITIVE_INFINITY;
+
+  for (const [kind, pattern] of DANCE_KIND_PATTERNS) {
+    const index = title.search(pattern);
+    if (index >= 0 && index < earliest) {
+      earliest = index;
+      match = kind;
+    }
+  }
+
+  return match;
 }
 
 export function formatTodayLabel(date = new Date()) {
@@ -74,14 +100,6 @@ export function formatTodayLabel(date = new Date()) {
   }).format(date);
 }
 
-export function formatSyncedAt(isoDate: string) {
-  return new Intl.DateTimeFormat("en-GB", {
-    timeZone: CALENDAR_TIMEZONE,
-    day: "numeric",
-    month: "short",
-    year: "numeric",
-    hour: "2-digit",
-    minute: "2-digit",
-    hourCycle: "h23",
-  }).format(new Date(isoDate));
+export function formatSyncedClock(isoDate: string) {
+  return formatClock(isoDate);
 }

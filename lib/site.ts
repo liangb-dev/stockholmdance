@@ -2,6 +2,7 @@ export const SITE_NAME = "Stockholm Bachata & Salsa";
 export const SITE_KICKER = "This week's floor";
 export const SITE_DESCRIPTION =
   "Drop-in classes. Packed socials. Parties people stay for. Bachata, salsa, and kizomba across the city — one calendar, less event-hunting.";
+export const DANCE_STYLES = ["Bachata", "Salsa", "Kizomba"] as const;
 
 export const CONTACT_EMAIL = "bernardxliang@gmail.com";
 
@@ -39,7 +40,7 @@ export function calendarEmbedUrl(mode: CalendarEmbedMode = "WEEK") {
     showTabs: "1",
     showCalendars: "0",
     showTz: "0",
-    bgcolor: "#fdfaf6",
+    bgcolor: "#f6efe6",
   });
 
   return `https://calendar.google.com/calendar/embed?${params.toString()}`;

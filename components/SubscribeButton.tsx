@@ -1,8 +1,8 @@
 import { CALENDAR_SUBSCRIBE_URL } from "@/lib/site";
 
-export function SubscribeButton() {
+export function SubscribeButton({ className = "mt-4" }: { className?: string }) {
   return (
-    <a className="btn mt-4 shadow-md" href={CALENDAR_SUBSCRIBE_URL}>
+    <a className={`btn ${className}`.trim()} href={CALENDAR_SUBSCRIBE_URL}>
       Subscribe to the calendar
     </a>
   );

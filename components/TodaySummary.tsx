@@ -3,15 +3,13 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { TodayEventList } from "@/components/TodayEventList";
 import {
-  formatSyncedAt,
+  formatSyncedClock,
   stockholmDateKey,
   type TodayPayload,
 } from "@/lib/event-display";
 import { CALENDAR_SYNC_SECONDS } from "@/lib/site";
 
 const CACHE_KEY = "today-summary-v1";
-const DURATION_KEY = "today-fetch-duration-ms";
-const DEFAULT_DURATION_MS = 4000;
 const STALE_MS = CALENDAR_SYNC_SECONDS * 1000;
 const OVERLAY_DELAY_MS = 400;
 
@@ -19,28 +17,6 @@ type CachedToday = {
   payload: TodayPayload;
   checkedAt: number;
 };
-
-function readExpectedDuration() {
-  if (typeof window === "undefined") {
-    return DEFAULT_DURATION_MS;
-  }
-
-  const stored = Number(window.localStorage.getItem(DURATION_KEY));
-  if (!Number.isFinite(stored) || stored <= 0) {
-    return DEFAULT_DURATION_MS;
-  }
-
-  return Math.min(15000, Math.max(1500, stored));
-}
-
-function rememberDuration(durationMs: number) {
-  const previous = readExpectedDuration();
-  const next = Math.round(previous * 0.6 + durationMs * 0.4);
-  window.localStorage.setItem(
-    DURATION_KEY,
-    String(Math.min(15000, Math.max(1500, next))),
-  );
-}
 
 function readCachedToday(): CachedToday | null {
   try {
@@ -69,25 +45,22 @@ function isFresh(checkedAt: number) {
   return Date.now() - checkedAt < STALE_MS;
 }
 
-function LoadingCountdown({ expectedMs }: { expectedMs: number }) {
-  const [remaining, setRemaining] = useState(Math.ceil(expectedMs / 1000));
-
-  useEffect(() => {
-    const startedAt = Date.now();
-    const timer = window.setInterval(() => {
-      const left = expectedMs - (Date.now() - startedAt);
-      setRemaining(Math.max(0, Math.ceil(left / 1000)));
-    }, 250);
-
-    return () => window.clearInterval(timer);
-  }, [expectedMs]);
-
+function EventSkeleton() {
   return (
-    <p className="mt-3 text-[0.95rem] text-muted" aria-live="polite">
-      {remaining > 0
-        ? `Loading today's events… about ${remaining}s remaining.`
-        : "Still loading today's events…"}
-    </p>
+    <div className="mt-4 space-y-4" aria-hidden>
+      {[0.9, 0.7, 0.8, 0.55].map((width, index) => (
+        <div key={index} className="flex gap-3">
+          <div className="h-9 w-12 animate-pulse rounded bg-border" />
+          <div className="flex-1 space-y-2 pt-0.5">
+            <div
+              className="h-4 animate-pulse rounded bg-border"
+              style={{ width: `${width * 100}%` }}
+            />
+            <div className="h-3 w-1/2 animate-pulse rounded bg-border/70" />
+          </div>
+        </div>
+      ))}
+    </div>
   );
 }
 
@@ -97,7 +70,6 @@ export function TodaySummary() {
   const [checking, setChecking] = useState(false);
   const [hydrated, setHydrated] = useState(false);
   const [error, setError] = useState("");
-  const [expectedMs, setExpectedMs] = useState(DEFAULT_DURATION_MS);
   const inFlight = useRef(false);
 
   const loadEvents = useCallback(async (options: { background: boolean; force?: boolean }) => {
@@ -113,7 +85,6 @@ export function TodaySummary() {
     }
 
     inFlight.current = true;
-    const startedAt = Date.now();
     const overlayTimer = options.background
       ? window.setTimeout(() => setChecking(true), OVERLAY_DELAY_MS)
       : undefined;
@@ -131,14 +102,13 @@ export function TodaySummary() {
       }
 
       const nextPayload = (await response.json()) as TodayPayload;
-      rememberDuration(Date.now() - startedAt);
       writeCachedToday(nextPayload);
       setPayload(nextPayload);
     } catch {
       if (options.background && cached) {
         setError("Could not refresh events. Showing the last loaded list.");
       } else {
-        setError("Could not load today's events. Check the calendar below, or try again.");
+        setError("Could not load today's events. Check the week view, or try again.");
       }
     } finally {
       if (overlayTimer) {
@@ -152,7 +122,6 @@ export function TodaySummary() {
 
   useEffect(() => {
     const cached = readCachedToday();
-    setExpectedMs(readExpectedDuration());
 
     if (cached) {
       setPayload(cached.payload);
@@ -172,37 +141,48 @@ export function TodaySummary() {
     return () => document.removeEventListener("visibilitychange", onVisible);
   }, [loadEvents]);
 
-  const showCountdown = hydrated && !payload && loading;
+  const showSkeleton = !payload && (loading || !hydrated);
 
   return (
-    <section className="relative mt-8">
-      <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
-        <h2 className="text-lg font-semibold tracking-tight">Today</h2>
-        {payload ? <p className="text-[0.95rem] text-muted">{payload.label}</p> : null}
+    <section id="today" className="relative mt-10">
+      <div className="flex flex-wrap items-end justify-between gap-x-3 gap-y-2">
+        <div>
+          <h2 className="font-display text-[1.65rem] leading-none tracking-tight">
+            Today
+          </h2>
+          {payload ? (
+            <p className="mt-1.5 text-sm text-muted">{payload.label}</p>
+          ) : null}
+        </div>
+        <a
+          href="#week"
+          className="text-sm font-semibold text-accent underline-offset-2 hover:underline lg:hidden"
+        >
+          Week view
+        </a>
       </div>
       {payload ? (
-        <p className="mt-1 text-[0.8rem] text-muted">
-          Last synced {formatSyncedAt(payload.fetchedAt)}
+        <p className="mt-1 text-[0.75rem] text-muted">
+          Updated {formatSyncedClock(payload.fetchedAt)}
+          {payload.events.length > 0
+            ? ` · ${payload.events.length} event${payload.events.length === 1 ? "" : "s"}`
+            : ""}
         </p>
       ) : null}
 
       {checking ? (
         <p
-          className="mt-3 rounded-md bg-accent-wash px-3 py-2 text-[0.9rem] text-foreground"
+          className="mt-3 rounded-full bg-accent-wash px-3 py-1.5 text-[0.82rem] text-foreground"
           aria-live="polite"
         >
           Checking for new events…
         </p>
       ) : null}
 
-      {!hydrated && !payload ? (
-        <p className="mt-3 text-[0.95rem] text-muted">Loading today's events…</p>
-      ) : null}
-
-      {showCountdown ? <LoadingCountdown expectedMs={expectedMs} /> : null}
+      {showSkeleton ? <EventSkeleton /> : null}
 
       {error && !payload ? (
-        <div className="mt-3">
+        <div className="mt-4">
           <p className="text-[0.95rem] text-muted">{error}</p>
           <button
             type="button"
