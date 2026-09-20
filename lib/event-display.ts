@@ -23,6 +23,7 @@ export type TodayEvent = {
   priceLabel: string;
   phases: EventPhase[];
   sourceUrl: string;
+  description: string;
 };
 
 export type TodayPayload = {

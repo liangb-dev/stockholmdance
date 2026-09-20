@@ -157,7 +157,7 @@ export function parseTodaysEvents(ics: string, now = new Date()): Omit<TodayPayl
       }
 
       seen.add(id);
-      const description = textValue(instance.event.description);
+      const rawDescription = textValue(instance.event.description);
       events.push({
         id,
         title: textValue(instance.summary).trim(),
@@ -166,9 +166,10 @@ export function parseTodaysEvents(ics: string, now = new Date()): Omit<TodayPayl
         end: instance.end.toISOString(),
         isAllDay: instance.isFullDay,
         isRecurring: instance.isRecurring,
-        priceLabel: parseEventPrice(description),
-        phases: parseEventPhases(description),
-        sourceUrl: parseSourceUrl(description),
+        priceLabel: parseEventPrice(rawDescription),
+        phases: parseEventPhases(rawDescription),
+        sourceUrl: parseSourceUrl(rawDescription),
+        description: cleanEventDescription(rawDescription),
       });
     }
   }
