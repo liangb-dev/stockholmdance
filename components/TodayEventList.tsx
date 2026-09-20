@@ -32,13 +32,15 @@ function EventRow({ event }: { event: TodayEvent }) {
   const status = eventStatus(event);
   const clocks = formatEventClocks(event);
   const kind = eventKind(event.title);
+  const titleClass =
+    "min-w-0 flex-1 text-[0.98rem] leading-snug font-medium break-words";
 
   return (
     <li
-      className={`relative flex gap-3 py-3.5 pl-3 ${status === "past" ? "opacity-50" : ""}`}
+      className={`relative flex gap-3 py-4 pl-3 ${status === "past" ? "opacity-50" : ""}`}
     >
       <span
-        className={`absolute top-3.5 bottom-3.5 left-0 w-[3px] rounded-full ${
+        className={`absolute top-4 bottom-4 left-0 w-[3px] rounded-full ${
           status === "now"
             ? "bg-accent"
             : kind
@@ -61,9 +63,18 @@ function EventRow({ event }: { event: TodayEvent }) {
       </time>
       <div className="min-w-0 flex-1">
         <div className="flex items-start gap-2">
-          <p className="min-w-0 flex-1 text-[0.98rem] leading-snug font-medium break-words">
-            {event.title}
-          </p>
+          {event.sourceUrl ? (
+            <a
+              href={event.sourceUrl}
+              className={`${titleClass} text-foreground underline-offset-2 hover:text-accent hover:underline`}
+              target="_blank"
+              rel="noreferrer"
+            >
+              {event.title}
+            </a>
+          ) : (
+            <p className={titleClass}>{event.title}</p>
+          )}
           {status === "now" ? (
             <span className="mt-0.5 inline-flex shrink-0 items-center gap-1 rounded-full bg-accent-wash px-2 py-0.5 text-[0.68rem] font-bold tracking-wide text-accent uppercase">
               <span className="size-1.5 animate-pulse rounded-full bg-accent" />
@@ -71,8 +82,24 @@ function EventRow({ event }: { event: TodayEvent }) {
             </span>
           ) : null}
         </div>
-        <p className="mt-1 flex flex-wrap items-center gap-x-2 gap-y-1 text-[0.85rem] break-words text-muted">
+
+        {event.phases.length > 0 ? (
+          <p className="mt-1.5 text-[0.82rem] leading-snug text-muted">
+            {event.phases.map((phase, index) => (
+              <span key={`${phase.label}-${phase.time}`}>
+                {index > 0 ? <span className="text-border"> · </span> : null}
+                <span className="font-medium text-foreground/80">{phase.label}</span>
+                <span> {phase.time}</span>
+              </span>
+            ))}
+          </p>
+        ) : null}
+
+        <p className="mt-1.5 flex flex-wrap items-center gap-x-2 gap-y-1 text-[0.85rem] break-words text-muted">
           {event.location ? <span>{event.location}</span> : null}
+          {event.priceLabel ? (
+            <span className="font-medium text-gold">{event.priceLabel}</span>
+          ) : null}
           {kind ? (
             <span
               className={`rounded-full px-1.5 py-px text-[0.68rem] font-semibold tracking-wide uppercase ${KIND_CLASS[kind]}`}

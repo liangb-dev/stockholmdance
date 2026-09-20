@@ -1,3 +1,4 @@
+import type { EventPhase } from "@/lib/event-details";
 import { CALENDAR_TIMEZONE } from "@/lib/site";
 
 export type TodayEventStatus = "past" | "now" | "upcoming";
@@ -19,6 +20,9 @@ export type TodayEvent = {
   end: string;
   isAllDay: boolean;
   isRecurring: boolean;
+  priceLabel: string;
+  phases: EventPhase[];
+  sourceUrl: string;
 };
 
 export type TodayPayload = {

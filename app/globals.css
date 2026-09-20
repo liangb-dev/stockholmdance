@@ -51,6 +51,16 @@ body {
   color: var(--foreground);
 }
 
+button,
+.btn {
+  cursor: pointer;
+}
+
+button:disabled,
+.btn:disabled {
+  cursor: not-allowed;
+}
+
 .btn {
   display: inline-flex;
   align-items: center;
@@ -63,7 +73,6 @@ body {
   border-radius: 999px;
   font-weight: 650;
   border: 1px solid transparent;
-  cursor: pointer;
   font-size: 0.95rem;
   line-height: 1.25;
   transition:

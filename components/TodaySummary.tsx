@@ -9,7 +9,7 @@ import {
 } from "@/lib/event-display";
 import { CALENDAR_SYNC_SECONDS } from "@/lib/site";
 
-const CACHE_KEY = "today-summary-v1";
+const CACHE_KEY = "today-summary-v2";
 const STALE_MS = CALENDAR_SYNC_SECONDS * 1000;
 const OVERLAY_DELAY_MS = 400;
 

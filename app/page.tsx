@@ -1,4 +1,5 @@
 import { CalendarEmbed } from "@/components/CalendarEmbed";
+import { HighlightsStrip } from "@/components/HighlightsStrip";
 import { Logo } from "@/components/Logo";
 import { SubscribeButton } from "@/components/SubscribeButton";
 import { TodaySummary } from "@/components/TodaySummary";
@@ -39,6 +40,8 @@ export default function Home() {
 
         <CalendarEmbed />
       </div>
+
+      <HighlightsStrip />
     </main>
   );
 }
