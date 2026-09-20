@@ -134,7 +134,7 @@ function EventDetailModal({
       <dialog
         ref={dialogRef}
         aria-labelledby={titleId}
-        className="fixed inset-0 m-auto max-h-[min(88vh,40rem)] w-[min(92vw,34rem)] open:flex open:flex-col overflow-hidden rounded-2xl border border-border bg-surface p-0 text-foreground shadow-[0_28px_80px_-28px_rgba(28,20,16,0.55)] backdrop:bg-foreground/45 backdrop:backdrop-blur-[2px]"
+        className="event-dialog"
         onClose={onClose}
       />
     );
@@ -151,7 +151,7 @@ function EventDetailModal({
     <dialog
       ref={dialogRef}
       aria-labelledby={titleId}
-      className="fixed inset-0 m-auto max-h-[min(88vh,40rem)] w-[min(92vw,34rem)] open:flex open:flex-col overflow-hidden rounded-2xl border border-border bg-surface p-0 text-foreground shadow-[0_28px_80px_-28px_rgba(28,20,16,0.55)] backdrop:bg-foreground/45 backdrop:backdrop-blur-[2px]"
+      className="event-dialog"
       onClose={onClose}
       onClick={(clickEvent) => {
         if (clickEvent.target === clickEvent.currentTarget) {
@@ -159,7 +159,7 @@ function EventDetailModal({
         }
       }}
     >
-      <div className="flex items-start justify-between gap-4 border-b border-border px-5 py-4 sm:px-6">
+      <div className="flex shrink-0 items-start justify-between gap-4 border-b border-border px-5 py-4 sm:px-6">
         <div className="min-w-0">
           <div className="flex flex-wrap items-center gap-x-2 gap-y-1.5">
             <p className="text-[0.72rem] font-semibold tracking-[0.12em] text-gold uppercase">
@@ -204,7 +204,7 @@ function EventDetailModal({
         </button>
       </div>
 
-      <div className="min-h-0 flex-1 overflow-y-auto px-5 py-5 sm:px-6">
+      <div className="event-dialog__body px-5 py-5 sm:px-6">
         {(event.location || event.priceLabel || event.phases.length > 0) && (
           <div className="space-y-2 text-[0.92rem] text-muted">
             {event.location ? <p>{event.location}</p> : null}
@@ -238,7 +238,7 @@ function EventDetailModal({
         )}
       </div>
 
-      <div className="flex flex-wrap gap-2 border-t border-border px-5 py-4 sm:px-6">
+      <div className="flex shrink-0 flex-wrap gap-2 border-t border-border px-5 py-4 sm:px-6">
         {event.sourceUrl ? (
           <a
             href={event.sourceUrl}
