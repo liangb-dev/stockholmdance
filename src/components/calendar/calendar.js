@@ -227,6 +227,11 @@ function CalendarSection() {
       : eventKind(active.title || active.rawTitle || "")
     : null;
 
+  const thisWeekKey = getMondayWeek(new Date())[0].key;
+  const viewingThisWeek = span === "week" && days[0].key === thisWeekKey;
+  const viewingNextWeek = span === "week" && !viewingThisWeek;
+  const viewingMonth = span === "month";
+
   return (
     <section className="calendar-part" id="week">
       <div className="title text-center">
@@ -248,10 +253,13 @@ function CalendarSection() {
               <p className="week-rows-label">
                 {span === "month" ? monthLabel : formatWeekRangeLabel(days)}
               </p>
-              <div className="week-rows-toolbar-end">
+              <div className="week-rows-toolbar-end" role="group" aria-label="Calendar filters">
                 <button
                   type="button"
-                  className="week-rows-nav"
+                  className={
+                    viewingThisWeek ? "week-rows-nav is-active" : "week-rows-nav"
+                  }
+                  aria-pressed={viewingThisWeek}
                   onClick={() => {
                     setSpan("week");
                     setAnchor(new Date());
@@ -261,7 +269,10 @@ function CalendarSection() {
                 </button>
                 <button
                   type="button"
-                  className="week-rows-nav"
+                  className={
+                    viewingNextWeek ? "week-rows-nav is-active" : "week-rows-nav"
+                  }
+                  aria-pressed={viewingNextWeek}
                   onClick={() => {
                     setSpan("week");
                     setAnchor((current) =>
@@ -273,7 +284,10 @@ function CalendarSection() {
                 </button>
                 <button
                   type="button"
-                  className="week-rows-nav"
+                  className={
+                    viewingMonth ? "week-rows-nav is-active" : "week-rows-nav"
+                  }
+                  aria-pressed={viewingMonth}
                   onClick={() => {
                     setSpan("month");
                     setAnchor(new Date());

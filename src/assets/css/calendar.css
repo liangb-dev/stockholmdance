@@ -172,6 +172,12 @@ html {
   color: #0f2f44;
 }
 
+.week-rows-nav.is-active {
+  border-color: #0f2f44;
+  background: #0f2f44;
+  color: #fff;
+}
+
 .week-rows {
   list-style: none;
   margin: 0;
@@ -448,11 +454,15 @@ html {
 }
 
 .today-kind {
-  padding: 1px 8px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.2em 0.65em;
   border-radius: 999px;
   font-size: 12px;
   font-weight: 800;
   letter-spacing: 0.08em;
+  line-height: 1;
   text-transform: uppercase;
 }
 
@@ -478,6 +488,12 @@ html {
 
 .highlights-part {
   margin-top: 80px;
+  padding: 56px 0 64px;
+  background:
+    linear-gradient(180deg, rgba(15, 47, 68, 0.035), rgba(15, 47, 68, 0.02)),
+    #f3f6f8;
+  border-top: 1px solid #e4e9ed;
+  border-bottom: 1px solid #e4e9ed;
 }
 
 .highlights-part .title p {
