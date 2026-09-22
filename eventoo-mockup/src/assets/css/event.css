@@ -1,0 +1,111 @@
+.feedback-part{
+    margin-top: 100px;
+}
+
+.feedback-part .title{
+    margin-bottom: 120px;
+}
+
+.feedback-part .title p{
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 20px;
+    color: #0f2f44;
+}
+
+.feedback-part .title h1{
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 40px;
+    font-weight: 800;
+    color: #0f2f44;
+}
+
+.feedback-part .feedback{
+    width: 50%;
+    text-align: center;
+}
+
+.feedback-part .feedback .details{
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 28px;
+    font-weight: 400;
+    width: 511px;
+    margin: auto;
+    line-height: 35px;
+}
+
+.feedback-part .feedback .img{
+    position: relative;
+    margin: 25px 0;
+}
+
+.feedback-part .feedback .icon{
+    background: #fff;
+    display: inline-block;
+    padding: 10px 20px;
+    border-radius: 28px;
+    position: absolute;
+    top: 20px;
+    right: 111px;
+    -webkit-box-shadow: 3px 0px 12px 0px rgba(0,0,0,0.1);
+-moz-box-shadow: 3px 0px 12px 0px rgba(0,0,0,0.1);
+box-shadow: 3px 0px 12px 0px rgba(0,0,0,0.1);
+}
+
+.feedback-part .feedback .icon i{
+    margin-left: 5px;
+    color: #ffa913;
+}
+
+.feedback-part .feedback h2{
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 32px;
+    font-weight: 400;
+    color: #444444;
+}
+
+.feedback-part .feedback .designation{
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 28px;
+    font-weight: 400;
+    color: #999999;
+}
+
+
+.feedback-part .slick-slide img{
+    display: inline-block;
+}
+
+.feedback-part button{
+    background: transparent;
+    border: 0;
+    outline: 0;
+}
+
+.feedback-part button i{
+    font-size: 24px;
+    width: 70px;
+    height: 70px;
+    background: linear-gradient(to right, #ffe169, #ffa913);
+    line-height: 70px;
+    text-align: center;
+    border-radius: 50%;
+}
+
+.feedback-part button.slick-arrow.slick-prev{
+    position: absolute;
+    top: 50%;
+    left: -150px;
+    transform: translateY(-50%);
+    z-index: 1;
+}
+
+.feedback-part button.slick-arrow.slick-next{
+    position: absolute;
+    top: 50%;
+    right: -150px;
+    transform: translateY(-50%);
+}
+
+
+  
+  

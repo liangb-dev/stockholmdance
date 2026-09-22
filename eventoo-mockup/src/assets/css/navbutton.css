@@ -1,0 +1,14 @@
+nav  ul button{
+    border: 0;
+    padding: 20px 30px;
+    background: linear-gradient(to right,#ffe169, #ffa913);
+    border-radius: 5px;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 800;
+    font-size: 24px;
+    color: #0f2f44;
+}
+
+nav ul button:focus{
+    outline: 0px auto -webkit-focus-ring-color;
+}

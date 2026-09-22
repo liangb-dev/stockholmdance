@@ -1,0 +1,80 @@
+.gallery-part {
+    margin-top: 100px;
+}
+
+.gallery-part .title p{
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 20px;
+    color: #0f2f44;
+}
+
+.gallery-part .title h1{
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 40px;
+    font-weight: 800;
+    color: #0f2f44;
+    margin-bottom: 60px;
+}
+
+.gallery-part .slick-initialized .slick-slide{
+    padding: 0 5px;
+}
+
+.gallery-part .img{
+    width: 15%;
+    position: relative;
+   
+}
+
+.gallery-part .img img{
+    width: 100%;
+}
+
+.gallery-part .overlay{
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(to right,rgba(108, 13, 176,.7),rgb(76, 119, 205,.7));
+        position: absolute;
+        top: 0;
+        left: 0;
+        opacity: 0;
+        transition: .4s;
+}
+
+.gallery-part .img:hover .overlay{
+    opacity: 1;
+}
+
+.gallery-part .overlay a{
+    color: #fff;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 100;
+    font-size: 100px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+    opacity: .7;
+}
+
+.gallery-part .button{
+    text-align: center;
+    margin-top: 40px;
+}
+
+.gallery-part button{
+    border: 0;
+    padding: 10px 30px;
+    background: linear-gradient(to right,#ffe169, #ffa913);
+    border-radius: 5px;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 800;
+    font-size: 24px;
+    color: #0f2f44;
+    text-transform: uppercase;
+}
+
+.gallery-part button:focus{
+    outline: 0px auto -webkit-focus-ring-color;
+}
+

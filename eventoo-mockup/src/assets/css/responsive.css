@@ -1,0 +1,1400 @@
+@media(max-width:575px){
+
+    nav{
+        padding-left: 0 !important;
+        padding-right: 0 !important;
+    }
+
+    nav .navbar-brand{
+        margin-left: 10px;
+    }
+
+    nav button:focus{
+        outline: 0;
+    }
+    nav button i{
+        color: #fff;
+        margin-top: 15px;
+    }
+
+    nav ul{
+        background: rgb(110, 6, 174,1);
+        text-align: center;
+        padding-bottom: 20px;
+        margin-top: 25px;
+    }
+
+    nav ul li{
+        margin-right: 0;
+        line-height: 2;
+    }
+
+    nav ul .dropdown-menu{
+        position: absolute !important;
+    }
+
+    nav ul button {
+        padding: 10px 30px;
+        font-size: 20px;
+  
+    }
+
+    .banner-part p {
+        font-size: 20px;
+        letter-spacing: 5px;
+    }
+
+    .banner-part h1 {
+        font-size: 40px;
+        width: auto;
+    }
+
+    .banner-part .counterdown {
+        justify-content: center;
+        width: auto;
+        margin-left: -30px;
+    }
+
+    .banner-part .counterdown p{
+        font-size: 40px;
+    }
+
+    .banner-part .counterdown .day, .banner-part .counterdown .hour, .banner-part .counterdown .min, .banner-part .counterdown .sec {
+        margin-left: 23px;
+    }
+
+    .banner-part .counterdown .sec p{
+        width: auto;
+    }
+
+    .banner-part .counterdown .day span {
+        bottom: -2px;
+        right: -39px;
+    }
+
+    .banner-part .counterdown span{
+        font-size: 20px;
+    }
+
+    .banner-part .counterdown .hour span {
+        bottom: 2px;
+        right: -40px;
+    }
+
+    .banner-part .counterdown .min span {
+        bottom: 12px;
+        right: -42px;
+    }
+
+    .banner-part .counterdown .sec span {
+        bottom: 19px;
+        right: -40px;
+    }
+
+    .banner-part .icon i {
+        position: static;
+        margin-left: 10px;
+       
+    }
+
+    .banner-part h1 {
+        padding-bottom: 25px;
+        width: 294px;
+    }
+
+    .banner-part .overlay {
+        padding-top: 175px;
+        padding-bottom: 50px;
+    }
+
+    .banner-part .icon i {
+        width: 50px;
+        height: 50px;
+        font-size: 20px;
+        line-height: 50px;
+    }
+
+    .banner-part .error img{
+        width: 90%;
+    }
+
+    .error-page .gohome{
+        width: auto;
+    }
+
+    .error-page .banner-part{
+        height: auto;
+    }
+
+    .error-page input {
+        width: auto;
+        margin-left: -30px;
+    }
+
+    .error-page .form button {
+        padding: 10px 16px;
+        right: 17px;
+    }
+
+    .error-page .sub {
+        text-align: center;
+        width: auto;
+        margin: 0 auto;
+        padding-top: 20px;
+        display: block;
+        padding: 20px;
+    }
+
+    .error-page .icon{
+        left: 0;
+    }
+
+    .error-page .gohome{
+        padding: 20px;
+    }
+
+    .comingsoon-page .banner-part{
+        height: auto;
+    }
+
+    .comingsoon-page input {
+        width: auto;
+        margin-left: -30px;
+    }
+
+    .comingsoon-page .form button {
+        padding: 10px 16px;
+        right: 17px;
+    }
+
+    .comingsoon-page .sub {
+        text-align: center;
+        width: auto;
+        margin: 0 auto;
+        padding-top: 20px;
+        display: block;
+        padding: 20px;
+    }
+
+    .comingsoon-page .counterdown {
+        margin-left: -30px;
+        margin-top: 0;
+    }
+
+    .comingsoon-page .icon {
+        left: 3%;
+    }
+
+    .festive-part .slick-initialized .slick-slide{
+        padding: 0 15px;
+    }
+
+    .festive-part .festive-left{
+        flex-direction: column;
+    }
+
+    .festive-part .festive-left .text-img {
+        width: 100%;
+        /* text-align: center; */
+        margin-top: 25px;
+        padding: 0 30px;
+    }
+
+    .festive-part .festive-left .text-img p{
+        text-align: left;
+    }
+
+    .festive-part .festive-left .text-img h1{
+        display: inline-block;
+    }
+
+    .festive-part .festive-left .text {
+        width: 100%;
+        padding: 0 30px;
+    }
+
+    .festive-part .festive-left .text .text-title{
+        margin-top: 25px;
+    }
+
+    .festive-part .address{
+        flex-direction: column;
+    }
+
+    .festive-part .address .add {
+        width: 100%;
+        margin-bottom: 30px;
+    }
+
+    
+
+    .festive-part .address img.addimg{
+        margin-left: 0;
+    }
+
+    .shedule-part .speaker{
+        margin-bottom: 50px;
+    }
+
+
+    .shedule-part .title{
+        margin-left: auto;
+    }
+
+    .shedule-part .speaker{
+        flex-direction: column;
+    }
+
+    .shedule-part .img {
+        width: 100%;
+        text-align: center;
+    }
+
+    .shedule-part .details{
+        width: 100%;
+    }
+
+    .shedule-part .date{
+        margin: 0 auto;
+    }
+
+    .shedule-part .sheduleicon {
+        left: 50%;
+        bottom: -60px;
+        transform: translateX(-50%);
+        width: 290px;
+    }
+
+    .shedule-part .sheduleicon i {
+        margin-left: 21px;
+    }
+
+    .shedule-part .name{
+        text-align: center;;
+    }
+
+    .shedule-part .desination{
+        text-align: center;
+    }
+
+    .gallery-part .overlay{
+        width: 100%;
+    }
+
+    .upcoming-part .event{
+        flex-direction: column;
+    }
+
+    .upcoming-part .event .img {
+        width: 54%;
+    }
+
+    .upcoming-part .event .details{
+        width: 100%;
+    }
+
+    .upcoming-part .event .details{
+        margin-left: 0;
+    }
+    .upcoming-part .event .details p{
+        width: 200px;
+    }
+   
+
+    .upcoming-part .event .location{
+        flex-direction: column;
+    }
+
+    .upcoming-part .event .location .address{
+        width: 100%;
+    }
+
+    .upcoming-part .event .location .address .img.immg img{
+        width: 25%;
+    }
+
+    .upcoming-part .event .location .address{
+        margin-bottom: 20px;
+    }
+
+    .upcoming-part .event .button{
+        width: 100%;
+    }
+
+    .upcoming-part .event .button a{
+            display: block;
+    }
+
+    .upcoming-part button{
+        width: 100%;
+        margin-top: 0;
+    }
+
+    .gallery-part .img{
+        margin-left: 4px;
+    }
+
+    .feedback-part .title{
+        margin-bottom: 50px;
+    }
+
+    .feedback-part .feedback .details{
+        width: auto;
+    }
+
+    .feedback-part .feedback .img {
+        margin-top: 80px;
+    }
+
+    .feedback-part .feedback .icon {
+        top: -54px;
+        right: 50%;
+        transform: translateX(50%);
+    }
+
+    .pricing-part{
+        margin-top: 100px;
+    }
+
+    
+
+    .pricing-part .heading {
+        font-size: 28px;
+        width: 100%;
+        margin-top: 30px;
+        margin-bottom: 20px;
+    }
+
+    .pricing-part input.firstname{
+        width: 100%;
+    }
+
+    .pricing-part input.firstname{
+        margin-left: 0;
+        margin-top: 20px;
+    }
+
+    .pricing-part .payment{
+        margin-bottom: 30px;
+    }
+
+    .pricing-part .check{
+        margin-top: 30px;
+    }
+
+    .prcing-page .pricing-plane{
+        margin-bottom: 30px;
+    }
+
+    .prcing-page input.firstname{
+        width: 100%;
+        margin-left: 0;
+        margin-top: 20px;
+    }
+
+    .prcing-page .payment{
+        margin-bottom: 30px;
+    }
+
+    .prcing-page .check{
+        margin-top: 30px;
+    }
+
+    .sponsor-part img {
+        margin: 0;
+        width: 33%;
+    }
+
+    .sponsor-page .sponsorname img{
+        width: 100%;
+    }
+
+    .sponsor-page .sponsorname::before{
+        width: 0;
+    }
+
+    .sponsor-page .sponsorname::after{
+        width: 0;
+    }
+
+    .about-page .event .overlay{
+        padding: 0;
+    }
+
+    .about-page .event .img {
+        width: 49%;
+        margin-top: 5px;
+    }
+
+    .footer-part form{
+        margin-bottom: 30px;
+    }
+
+    .footer-part input{
+        width: auto;
+        height: 57px;
+    }
+
+    .footer-part button {
+        padding: 16px 8px;
+        font-size: 17px;
+    }
+
+    .footer-part .icon{
+        margin-bottom: 0;
+    }
+
+    .footer-part .icon i{
+        margin-left: 5px;
+    }
+
+    .footer-part .fotermenu ul li{
+        margin-left: 10px;
+    }
+
+    .footer-part .copy span{
+        font-size: 15px;
+    }
+}
+
+
+@media(min-width:576px) and (max-width:767.98px){
+
+    nav{
+        padding-left: 0 !important;
+        padding-right: 0 !important;
+    }
+
+    nav .navbar-brand{
+        margin-left: 10px;
+    }
+
+    nav button:focus{
+        outline: 0;
+    }
+    nav button i{
+        color: #fff;
+        margin-top: 15px;
+    }
+
+    nav ul{
+        background: rgb(110, 6, 174,1);
+        text-align: center;
+        padding-bottom: 20px;
+        margin-top: 25px;
+    }
+
+    nav ul li{
+        margin-right: 0;
+        line-height: 2;
+    }
+
+    nav ul .dropdown-menu{
+        position: absolute !important;
+    }
+
+    nav ul button {
+        padding: 10px 30px;
+        font-size: 20px;
+  
+    }
+
+
+    .banner-part h1 {
+        font-size: 60px;
+        width: auto;
+    }
+
+    .banner-part .counterdown {
+        justify-content: center;
+        width: auto;
+        margin-left: -15px;
+    }
+
+   
+
+    .banner-part .counterdown .day, .banner-part .counterdown .hour, .banner-part .counterdown .min, .banner-part .counterdown .sec {
+        margin-left: 30px;
+    }
+
+    .banner-part .counterdown .sec p{
+        width: auto;
+    }
+
+    .banner-part .counterdown .sec span{
+      right: -75px;
+    }
+
+
+    .banner-part .icon i {
+        position: static;
+        margin-left: 10px;
+       
+    }
+
+    .banner-part h1 {
+        padding-bottom: 25px;
+    }
+
+    .banner-part .overlay {
+        padding-top: 175px;
+    }
+
+    .error-page .banner-part{
+        height: auto;
+    }
+
+    .error-page .gohome{
+        width: auto;
+    }
+
+    .error-page input {
+        width: 530px;
+    }
+
+    .error-page .form button {
+        right: 86px;
+    }
+
+    .error-page .sub {
+        width: 530px;
+    }
+
+    .error-page .icon {
+        left: 30%;
+    }
+
+    
+    .comingsoon-page .banner-part{
+        height: auto;
+    }
+
+    .comingsoon-page input {
+        width: auto;
+        margin-left: -30px;
+    }
+
+    .comingsoon-page .form button {
+        padding: 10px 16px;
+        right: 17px;
+    }
+
+    .comingsoon-page .sub {
+        text-align: center;
+        width: auto;
+        margin: 0 auto;
+        padding-top: 20px;
+        display: block;
+        padding: 20px;
+    }
+
+    .comingsoon-page .counterdown {
+        margin-left: -30px;
+        margin-top: 0;
+    }
+
+    .comingsoon-page .icon {
+        left: 3%;
+    }
+
+    .festive-part .address p{
+        width: 182px;
+    }
+    .shedule-part .title{
+        margin-left: 0;
+    }
+
+    .upcoming-part .event{
+        flex-wrap: wrap;
+    }
+
+    .upcoming-part .event .img{
+        width: 30%;
+    }
+
+    .upcoming-part .event h2{
+        margin-top: 0;
+    }
+
+    .upcoming-part .event .details{
+        margin-left: 10px;
+        width: 67%;
+    }
+
+    .upcoming-part .event h2{
+        font-size: 30px;
+    }
+
+    .upcoming-part .event .details {
+        font-size: 17px;
+    }
+
+    .upcoming-part .event .details p{
+        margin-left: -25px;
+    }
+
+    .upcoming-part .event .button{
+        width: 100%;
+    }
+
+    .upcoming-part .event .button a{
+        display: block;
+    }
+
+    .upcoming-part button{
+        width: 100%;
+    }
+
+    .upcoming-part .event .location .shape::after{
+        left: -7px;
+    }
+
+    .gallery-part .overlay{
+        width: 100%;
+    }
+
+
+    .gallery-part .img{
+        margin-left: 4px;
+    }
+
+    .feedback-part .title{
+        margin-bottom: 50px;
+    }
+
+    .feedback-part .title{
+        margin-bottom: 60px;
+    }
+
+    .feedback-part .feedback .details{
+        width: auto;
+    }
+
+    .feedback-part .feedback .img {
+        margin-top: 80px;
+    }
+
+    .feedback-part .feedback .icon {
+        top: -54px;
+        right: 50%;
+        transform: translateX(50%);
+    }
+
+    .feedback-part button.slick-arrow.slick-prev{
+        left: 0
+    }
+
+    .feedback-part button.slick-arrow.slick-next{
+        right: 0;
+    }
+
+    .pricing-part{
+        margin-top: 100px;
+    }
+
+    .pricing-part button.slick-prev{
+        left: -30px;
+        top: 47%;
+    }
+
+    .pricing-part button.slick-next{
+        left: -30px;
+    }
+
+    .pricing-part .heading {
+        font-size: 28px;
+        width: 100%;
+        margin-top: 30px;
+    }
+
+    .pricing-part input.firstname{
+        width: 100%;
+    }
+
+    .pricing-part input.firstname{
+        margin-left: 0;
+        margin-top: 20px;
+    }
+
+    .pricing-part .payment{
+        margin-bottom: 30px;
+    }
+
+    .pricing-part .check{
+        margin-top: 30px;
+    }
+
+    .pricing-part button i {
+        width: 60px;
+        height: 60px;
+        line-height: 60px;
+    }
+
+    .prcing-page .pricing-plane{
+        margin-bottom: 30px;
+    }
+
+    .prcing-page input.firstname{
+        width: 100%;
+        margin-left: 0;
+        margin-top: 20px;
+    }
+
+    .prcing-page .payment{
+        margin-bottom: 30px;
+    }
+
+    .prcing-page .check {
+        margin-top: 30px;
+    }
+
+    .sponsor-part img {
+        margin: 0;
+        width: 33%;
+    }
+
+    .sponsor-page .sponsorname::before{
+        width: 0;
+    }
+
+    .sponsor-page .sponsorname::after{
+        width: 0;
+    }
+
+    .about-page .event .overlay{
+        padding: 0;
+    }
+
+    .about-page .event .img {
+        width: 49%;
+        margin-top: 5px;
+    }
+
+
+    .footer-part form{
+        margin-bottom: 30px;
+    }
+
+    .footer-part input{
+        width: 520px;
+        height: 57px;
+    }
+
+    .footer-part button {
+        padding: 16px 8px;
+        font-size: 17px;
+    }
+
+    .footer-part .icon{
+        margin-bottom: 0;
+    }
+
+    .footer-part .icon i{
+        margin-left: 15px;
+    }
+
+    .footer-part .fotermenu ul li{
+        margin-left: 10px;
+    }
+
+    .footer-part .copy span{
+        font-size: 15px;
+    }
+}
+
+
+
+@media(min-width:768px) and (max-width:991.98px){
+
+    nav{
+        padding-left: 0 !important;
+        padding-right: 0 !important;
+    }
+
+    nav .navbar-brand{
+        margin-left: 10px;
+    }
+
+    nav button:focus{
+        outline: 0;
+    }
+    nav button i{
+        color: #fff;
+        margin-top: 15px;
+    }
+
+    nav ul{
+        background: rgb(110, 6, 174,1);
+        text-align: center;
+        padding-bottom: 20px;
+        margin-top: 25px;
+    }
+
+    nav ul li{
+        margin-right: 0;
+        line-height: 2;
+    }
+
+    nav ul .dropdown-menu{
+        position: absolute !important;
+    }
+
+    nav ul button {
+        padding: 10px 30px;
+        font-size: 20px;
+  
+    }
+
+
+    .banner-part h1 {
+        font-size: 80px;
+        width: auto;
+    }
+
+    .banner-part .counterdown {
+        justify-content: center;
+        width: auto;
+    }
+
+   
+
+    .banner-part .counterdown .day, .banner-part .counterdown .hour, .banner-part .counterdown .min, .banner-part .counterdown .sec {
+        margin-left: 30px;
+    }
+
+    .banner-part .counterdown .sec p{
+        width: auto;
+    }
+
+    .banner-part .counterdown .sec span{
+      right: -75px;
+    }
+
+
+    .banner-part .icon i {
+        position: static;
+        margin-left: 10px;
+       
+    }
+
+    .banner-part h1 {
+        padding-bottom: 25px;
+    }
+
+    .banner-part .overlay {
+        padding-top: 175px;
+    }
+
+    
+    .error-page .banner-part{
+        height: auto;
+    }
+
+    .error-page .gohome{
+        width: auto;
+    }
+
+    .error-page input {
+        width: 530px;
+    }
+
+    .error-page .form button {
+        right: 86px;
+    }
+
+    .error-page .sub {
+        width: 530px;
+    }
+
+    .error-page .icon {
+        left: 24%;
+    }
+
+    .festive-part .address p{
+        width: 182px;
+    }
+
+    
+    .comingsoon-page .banner-part{
+        height: auto;
+    }
+
+    .comingsoon-page input {
+        width: auto;
+        margin-left: -30px;
+    }
+
+    .comingsoon-page .form button {
+        padding: 10px 16px;
+        right: 17px;
+    }
+
+    .comingsoon-page .sub {
+        text-align: center;
+        width: auto;
+        margin: 0 auto;
+        padding-top: 20px;
+        display: block;
+        padding: 20px;
+    }
+
+    .comingsoon-page .counterdown {
+        margin-left: -30px;
+        margin-top: 0;
+    }
+
+    .comingsoon-page .icon {
+        left: 3%;
+    }
+
+    .shedule-part .title{
+        margin-left: 0;
+    }
+
+    .shedule-part .speaker{
+        margin-top: 65px;
+    }
+
+    .shedule-part .sheduleicon{
+        bottom: -24px;
+    }
+
+    .shedule-part .img{
+        width: 50%;
+    }
+
+    .shedule-part .img img{
+        width: 100%;
+    }
+
+    .shedule-part .details{
+        width: 50%;
+        margin-left: 10px;
+        margin-top: 0;
+    }
+
+    .shedule-part .sheduleicon i {
+        margin-left: 12px;
+        font-size: 18px;
+    }
+
+    .shedule-part .sheduleicon span::after {
+        left: 53px;
+    }
+
+    .shedule-part .name {
+        font-size: 23px;
+    }
+
+    .shedule-part .date {
+        font-size: 17px;
+        width: 134px;
+    }
+
+    .upcoming-part .event{
+        flex-wrap: wrap;
+    }
+
+    .upcoming-part .event .img{
+        width: 24%;
+    }
+
+    .upcoming-part .event h2{
+        margin-top: 0;
+    }
+
+    .upcoming-part .event .details{
+        margin-left: 10px;
+        width: 67%;
+    }
+
+    .upcoming-part .event h2{
+        font-size: 30px;
+    }
+
+    .upcoming-part .event .details {
+        font-size: 17px;
+    }
+
+    .upcoming-part .event .details p{
+        margin-left: -25px;
+    }
+
+    .upcoming-part .event .button{
+        width: 100%;
+    }
+
+    .upcoming-part .event .button a{
+        display: block;
+    }
+
+    .upcoming-part button{
+        width: 100%;
+        margin-top: 10px;
+    }
+
+    .upcoming-part .event .location .shape::after{
+        left: -7px;
+    }
+
+   
+
+   
+
+
+    .gallery-part .img{
+        margin-left: 4px;
+    }
+
+    .gallery-part .overlay {
+        width: 100%;
+    }
+
+    .feedback-part .feedback .details{
+        width: auto;
+    }
+
+    .feedback-part .title{
+        margin-bottom: 60px;
+    }
+
+    .feedback-part .feedback .img {
+        margin-top: 80px;
+    }
+
+    .feedback-part .feedback .icon {
+        top: -54px;
+        right: 50%;
+        transform: translateX(50%);
+    }
+
+    .feedback-part button.slick-arrow.slick-prev{
+        left: 0
+    }
+
+    .feedback-part button.slick-arrow.slick-next{
+        right: 0;
+    }
+
+    .pricing-part{
+        margin-top: 100px;
+    }
+
+    .pricing-part button.slick-prev{
+        left: -30px;
+        top: 47%;
+    }
+
+    .pricing-part .heading{
+        margin-bottom: 5px;
+    }
+
+    .pricing-part button.slick-next{
+        left: -30px;
+    }
+
+    .pricing-part .heading {
+        font-size: 28px;
+        width: 100%;
+    }
+
+    .pricing-part input.firstname{
+        width: 100%;
+    }
+
+    .pricing-part input.firstname{
+        margin-left: 0;
+        margin-top: 20px;
+    }
+
+    .pricing-part .payment{
+        margin-bottom: 30px;
+    }
+
+    .pricing-part .check{
+        margin-top: 30px;
+    }
+
+    .pricing-part button i {
+        width: 60px;
+        height: 60px;
+        line-height: 60px;
+    }
+
+    .prcing-page input.firstname{
+        margin-left: 20px;
+    }
+
+    .sponsor-part img {
+        margin: 0;
+        width: 50%;
+    }
+
+    .sponsor-part img {
+        width: auto;
+    }
+
+    .about-page .event .overlay{
+        padding: 0;
+    }
+
+    .about-page .event .img {
+        width: 24%;
+    }
+
+    .footer-part form{
+        margin-bottom: 30px;
+    }
+
+    .footer-part input{
+        width: 570px;
+        height: 58px;
+    }
+
+    .footer-part button {
+        padding: 16px 8px;
+        font-size: 17px;
+    }
+
+    .footer-part .icon{
+        margin-bottom: 0;
+    }
+
+    .footer-part .icon i{
+        margin-left: 30px;
+    }
+
+    .footer-part .fotermenu ul li{
+        margin-left: 10px;
+    }
+
+    .footer-part .copy span{
+        font-size: 15px;
+    }
+}
+
+
+@media(min-width:992px) and (max-width:1199.98px){
+
+    nav ul li {
+        margin-right: 34px;
+    }
+
+    nav ul button {
+        padding: 10px 30px;
+        margin-top: 10px;
+    }
+
+
+    .banner-part h1 {
+        font-size: 96px;
+        width: auto;
+    }
+
+    .banner-part .counterdown {
+        justify-content: flex-end;
+        width: auto;
+    }
+
+   
+
+    .banner-part .counterdown .day, .banner-part .counterdown .hour, .banner-part .counterdown .min, .banner-part .counterdown .sec {
+        margin-left: 30px;
+    }
+
+    .banner-part .counterdown .sec p{
+        width: auto;
+    }
+
+    .banner-part .counterdown .sec span{
+      right: -75px;
+    }
+
+
+    .banner-part .icon i {
+        position: static;
+        margin-left: 10px;
+       
+    }
+
+    .banner-part h1 {
+        padding-bottom: 25px;
+    }
+
+    .banner-part .overlay {
+        padding-top: 175px;
+    }
+
+    
+    .error-page .banner-part{
+        height: auto;
+    }
+
+    .error-page .gohome{
+        width: auto;
+    }
+
+    .error-page input {
+        width: 530px;
+    }
+
+    .error-page .form button {
+        right: 86px;
+    }
+
+    .error-page .sub {
+        width: 530px;
+    }
+
+    .error-page .icon {
+        left: 0;
+    }
+
+    
+    .comingsoon-page .banner-part{
+        height: auto;
+    }
+
+   
+
+    .comingsoon-page .icon {
+        left: 3%;
+        top:65%;
+    }
+
+
+    .festive-part .address p{
+        width: 182px;
+    }
+
+    .shedule-part .img img{
+        width: 100%;
+    }
+
+    .shedule-part .details {
+        margin-left: 15px;
+    }
+
+    .shedule-part .sheduleicon {
+        bottom: -18px;
+    }
+
+    
+    .upcoming-part .event .img {
+        width: 16%;
+    }
+    
+
+    .upcoming-part .event .location .shape::after{
+        left: -20px;
+    }
+
+    .gallery-part .img{
+        margin-left: 4px;
+    }
+
+    .gallery-part .overlay {
+        width: 100%;
+    }
+
+    .feedback-part .title{
+        margin-bottom: 60px;
+    }
+    .feedback-part .feedback .details{
+        width: auto;
+    }
+
+    .feedback-part .feedback .icon {
+        right: 70px;
+    }
+
+   
+
+    .feedback-part button.slick-arrow.slick-prev {
+        top: auto;
+        bottom: 0;
+        left: 48%;
+        transform: translateX(-50%);
+        
+    }
+
+    .feedback-part button.slick-arrow.slick-next {
+        top: auto;
+        bottom: 0;
+        left: 58%;
+        transform: translateX(-50%);
+        
+    }
+
+    .pricing-part input.firstname{
+        margin-left: 21px;
+    }
+
+    .pricing-part .heading{
+        width: 68%;
+    }
+
+    .pricing-part .check {
+        margin-top: 70px;
+    }
+
+    .prcing-page input.firstname{
+        margin-left: 27px;
+    }
+
+    .about-page .event .overlay{
+        padding: 0;
+    }
+    
+
+    .footer-part form{
+        margin-bottom: 30px;
+    }
+
+    .footer-part input{
+        width: 570px;
+        height: 58px;
+    }
+
+    .footer-part button {
+        padding: 16px 8px;
+        font-size: 17px;
+    }
+
+    .footer-part .icon{
+        margin-bottom: 0;
+    }
+
+    .footer-part .icon i{
+        margin-left: 30px;
+    }
+
+    .footer-part .fotermenu ul li{
+        margin-left: 10px;
+    }
+
+    .footer-part .copy span{
+        font-size: 15px;
+    }
+}
+
+@media(min-width:1200px){
+    .error-page .banner-part{
+        height: auto;
+    }
+
+    .error-page .icon {
+        left: 0;
+    }
+
+    .comingsoon-page .banner-part{
+        height: auto;
+    }
+
+   
+
+    .comingsoon-page .icon {
+        left: 3%;
+        top:65%;
+    }
+}

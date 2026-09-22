@@ -1,0 +1,111 @@
+.footer-part{
+    margin-top: 100px;
+    color: #fff;
+    text-align: center;
+    padding: 30px;
+}
+
+
+.footer-part p{
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 20px;
+    color: #ffa913;
+}
+
+.footer-part h2{
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 30px;
+    margin-bottom: 30px;
+}
+
+.footer-part form{
+    position: relative;
+    display: inline-block;
+    margin-bottom: 60px;
+}
+
+
+.footer-part input{
+    width: 570px;
+    height: 56px;
+    background: #fff;
+    padding-left: 15px;
+    box-sizing: border-box;
+    border: 1px solid #fff;
+    border-radius: 5px;
+    outline: 0;
+}
+
+.footer-part button{
+    padding: 10px 13px;
+    background: linear-gradient(to right,#ffe169, #ffa201);
+    border: 0;
+    color: #fff;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: bold;
+    font-size: 24px;
+    text-transform: uppercase;
+    position: absolute;
+    top: 0;
+    right: 0;
+    border-radius: 5px;
+    height: 100%;
+
+
+}
+
+.footer-part .icon{
+    margin-bottom: 30px;
+    padding-bottom: 30px;
+ 
+}
+
+.footer-part .icon i{
+    width: 60px;
+    height: 60px;
+    background: #fff;
+    color: #0f2f44;
+    border-radius: 50%;
+    text-align: center;
+    line-height: 60px;
+    font-size: 20px;
+    margin-left: 15px;
+    transition: .4s;
+}
+
+.footer-part .icon i:hover{
+    background: linear-gradient(to right,#ffe169, #ffa201);
+}
+
+
+.footer-part .fotermenu{
+    border-bottom: 1px solid #1f3b4d;
+}
+
+.footer-part .fotermenu ul li{
+    display: inline-block;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 20px;
+    margin-left: 40px;
+    
+}
+
+.footer-part .fotermenu ul li a{
+    color: #fff;
+    transition: .4s;
+}
+
+.footer-part .fotermenu ul li:hover a{
+    color: #ffe169;
+}
+
+.footer-part .copy{
+    padding-top: 30px;
+}
+
+.footer-part .copy span{
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 16px;
+}
+
+

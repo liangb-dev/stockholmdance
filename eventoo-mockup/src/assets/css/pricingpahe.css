@@ -1,0 +1,196 @@
+.prcing-page nav{
+    text-align: center;
+}
+
+.prcing-page .overlay{
+    width: 100%;
+    height: 100%;
+    background: rgb(110, 6, 174,.6);
+    padding-top: 235px;
+    padding-bottom: 74px;
+}
+
+.prcing-page nav h1{
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 32px;
+    color: #fff;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+.prcing-page .breadcrumb{
+    justify-content: center;
+    background: transparent;
+}
+
+.prcing-page .breadcrumb-item+.breadcrumb-item::before{
+    content: " " !important;
+}
+
+.prcing-page  ol li a{
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 20px;
+    color: #fff;
+    font-weight: 400;
+    color: #fff;
+    text-transform: capitalize;
+}
+
+.prcing-page  ol li a i{
+    color: #fff;
+    font-size: 7px;
+    margin-right: 7px;
+}
+
+.prcing-page .breadcrumb-item+.breadcrumb-item{
+    padding-left: 0;
+}
+
+.prcing-page  ol li.active a{
+    color: #ffe169;
+}
+
+.prcing-page .pricing{
+    margin-top: 100px;
+}
+
+.prcing-page .pricing .pricing-plane{
+    transition: .4s;
+}
+
+.prcing-page .pricing .pricing-plane p{
+    transition: .4s;
+}
+
+.prcing-page .pricing .pricing-plane li{
+    transition: .4s;
+}
+
+.prcing-page .pricing .pricing-plane:hover{
+    background: #0f2f44;
+    
+}
+
+.prcing-page .pricing .pricing-plane:hover p{
+    color: #fff;
+}
+
+.prcing-page .pricing .pricing-plane:hover li{
+    color: #fff;
+}
+
+
+
+
+.prcing-page input.firstname.ml{
+    margin-left: 0;
+}
+
+
+.prcing-page input.firstname {
+    border: 1px solid #dddddd;
+    width: 48.5%;
+    margin-left: 30px;
+    box-sizing: border-box;
+    padding: 13px 20px;
+    outline: 0;
+    border-radius: 5px;
+}
+
+.prcing-page input.email.ml{
+    margin-left: 0;
+}
+
+.prcing-page input.email {
+    border: 1px solid #dddddd;
+    width: 99.99%;
+    margin-top: 20px;
+    box-sizing: border-box;
+    padding: 13px 20px;
+    outline: 0;
+    border-radius: 5px;
+}
+
+.prcing-page select {
+    border: 1px solid #dddddd;
+    width: 99.99%;
+    margin-top: 20px;
+    box-sizing: border-box;
+    padding: 13px 20px;
+    outline: 0;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 20px;
+    color: #999999;
+    text-transform: capitalize;
+    margin-bottom: 30px;
+
+}
+
+.prcing-page input::placeholder{
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 20px;
+    color: #999999;
+    text-transform: capitalize;
+}
+
+.prcing-page .payment{
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 24px;
+    color: #222222;
+}
+
+.prcing-page #agree{
+    display: none;
+}
+
+.prcing-page .check{
+    position: relative;
+    margin-left: 30px;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 20px;
+    color: #444444;
+    margin-top: 80px;
+}
+
+.prcing-page .check:after{
+    position: absolute;
+    top: 10px;
+    left: -27px;
+    width: 15px;
+    height: 15px;
+    background: #cccccc;
+    content: "";
+}
+
+.prcing-page #agree:checked + .check:after{
+    background: #ffa201;
+}
+
+.prcing-page .heading{
+    display: block;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 33px;
+    color: #0f2f44;
+    font-weight: 800;
+    width: 100%;
+    line-height: 1;
+    width: 310px;
+    margin-bottom: 70px;
+    margin-top: 100px;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+}
+
+.prcing-page .submit{
+    background: linear-gradient(to right,#ffe169, #ffa913);
+    display: block;
+    width: 100%;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 24px;
+    font-weight: 800;
+    color: #0f2f44;
+    padding: 13px 0;
+    margin-top: 14px;
+    border: 0;
+}

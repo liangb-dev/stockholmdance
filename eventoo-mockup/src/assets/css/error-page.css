@@ -1,0 +1,116 @@
+.error-page .overlay{
+    padding-top: 195px;
+}
+
+.error-page .error{
+    display: block;
+}
+
+.error-page .banner-part{
+    height: 100vh;
+}
+
+.error-page .ericon i{
+    width: 60px;
+    height: 60px;
+    background: #fff;
+    border-radius: 50%;
+    text-align: center;
+    line-height: 60px;
+    color: #0f2f44;
+    font-size: 20px;
+    margin: 0 8px;
+}
+
+.error-page .icon {
+    
+    left: 100%;
+}
+
+.error-page .ericon{
+    margin-top: 30px;
+    display: block;
+}
+
+.error-page .ericon i:hover{
+    background: linear-gradient(to right,#ffe169, #ffa913);;
+}
+
+.error-page .form{
+    margin-top: 40px;
+    position: relative;
+    display: inline-block;
+}
+
+.error-page input{
+    display: inline-block;
+    width: 600px;
+    background: transparent;
+    border: 1px solid rgba(255, 255, 255,.15);
+    padding: 25px 20px;
+    outline: 0;
+    color: #fff;
+    
+}
+
+.error-page input::placeholder{
+    color: #fff;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 20px;
+}
+
+.error-page .form button{
+    border: 0;
+    padding: 10px 30px;
+    background: linear-gradient(to right,#ffe169, #ffa913);
+    border-radius: 5px;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 800;
+    font-size: 24px;
+    color: #fff;
+    text-transform: uppercase;
+    outline: 0;
+    position: absolute;
+    top: 50%;
+    right: 0;    
+    transform: translate(50%,-50%);
+}
+
+.error-page .sub{
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 20px;
+    letter-spacing: normal;
+    text-align: left;
+    width: 600px;
+    margin: 0 auto;
+    padding-top: 20px;
+    display: block;
+}
+
+.error-page .errortitle{
+    font-size: 42px;
+   padding-bottom: 35px;
+}
+
+.error-page .gohome{
+    font-size: 24px;
+    width: 652px;
+    margin: 0 auto;
+    letter-spacing: normal;
+    line-height: 35px;
+    padding-top: 40px;
+}
+
+.error-page .gohome span a{
+    text-transform: uppercase;
+    color: #ffe169;
+    margin: 0 5px;
+}
+
+.error-page .homebanner{
+    display: none;
+}
+
+.error-page .counterdown{
+    display: none;
+}

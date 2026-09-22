@@ -1,0 +1,234 @@
+.pricing-part{
+    margin-top: 150px;
+}
+
+.pricing-part .title p{
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 20px;
+    color: #0f2f44;
+}
+
+.pricing-part .title h1{
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 40px;
+    font-weight: 800;
+    color: #0f2f44;
+    margin-bottom: 60px;
+}
+
+.pricing-plane{
+    text-align: center;
+    -webkit-box-shadow: 0px 0px 7px -5px rgba(0,0,0,0.75);
+-moz-box-shadow: 0px 0px 7px -5px rgba(0,0,0,0.75);
+box-shadow: 0px 0px 7px -5px rgba(0,0,0,0.75);
+padding: 53px 0;
+position: relative;
+overflow: hidden;
+padding-bottom: 36px;
+}
+
+.pricing-plane p{
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 32px;
+    color: #0f2f44;
+    font-weight: 500;
+}
+
+.pricing-plane h1{
+    background: linear-gradient(to top,#ffe169, #ffa201);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 60px;
+    font-weight: 900;
+}
+
+.pricing-plane ul{
+    margin-top: 40px;
+}
+
+.pricing-plane ul li{
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 24px;
+    color: #444444;
+    margin-top: 10px;
+    font-weight: 500;
+}
+
+
+.pricing-plane .shape1{
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+.pricing-plane .shape2{
+    position: absolute;
+    top: 0;
+    right: 0;
+}
+
+
+.pricing-plane .shape3{
+    position: absolute;
+    bottom: 0;
+    left: 0;
+}
+
+.pricing-part button{
+    background: none;
+    border: 0;
+    outline: 0;
+}
+
+.pricing-part button i{
+    font-size: 24px;
+    width: 70px;
+    height: 70px;
+    background: linear-gradient(to right, #ffe169, #ffa913);
+    line-height: 70px;
+    text-align: center;
+    border-radius: 50%;
+}
+
+.pricing-part button.slick-prev{
+    position: absolute;
+    top: 44%;
+    left: -100px;
+    transform: translateY(-50%);
+}
+
+.pricing-part button.slick-next{
+    position: absolute;
+    top: 58%;
+    left: -100px;
+    transform: translateY(-50%);
+}
+
+.pricing-part input.firstname.ml{
+    margin-left: 0;
+}
+
+
+.pricing-part input.firstname {
+    border: 1px solid #dddddd;
+    width: 48%;
+    margin-left: 25px;
+    box-sizing: border-box;
+    padding: 13px 20px;
+    outline: 0;
+    border-radius: 5px;
+}
+
+.pricing-part input.email.ml{
+    margin-left: 0;
+}
+
+.pricing-part input.email {
+    border: 1px solid #dddddd;
+    width: 99.99%;
+    margin-top: 20px;
+    box-sizing: border-box;
+    padding: 13px 20px;
+    outline: 0;
+    border-radius: 5px;
+}
+
+.pricing-part select {
+    border: 1px solid #dddddd;
+    width: 99.99%;
+    margin-top: 20px;
+    box-sizing: border-box;
+    padding: 13px 20px;
+    outline: 0;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 20px;
+    color: #999999;
+    text-transform: capitalize;
+    margin-bottom: 30px;
+    -moz-appearance: none;
+
+}
+
+.pricing-part input::placeholder{
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 20px;
+    color: #999999;
+    text-transform: capitalize;
+}
+
+.pricing-part .payment{
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 24px;
+    color: #222222;
+}
+
+.pricing-part #agree{
+    display: none;
+}
+
+.pricing-part .check{
+    position: relative;
+    margin-left: 30px;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 20px;
+    color: #444444;
+    margin-top: 80px;
+}
+
+.pricing-part .check:after{
+    position: absolute;
+    top: 10px;
+    left: -27px;
+    width: 15px;
+    height: 15px;
+    background: #cccccc;
+    content: "";
+}
+
+.pricing-part #agree:checked + .check:after{
+    background: #ffa201;
+}
+
+.pricing-part .heading{
+    display: block;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 33px;
+    color: #ffa201;
+    font-weight: 800;
+    width: 50%;
+    line-height: 1;
+    margin-bottom: 30px;
+}
+
+.pricing-part .submit{
+    background: linear-gradient(to right,#ffe169, #ffa913);
+    display: block;
+    width: 100%;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 24px;
+    font-weight: 800;
+    color: #0f2f44;
+    padding: 13px 0;
+    margin-top: 14px;
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

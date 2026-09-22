@@ -1,0 +1,125 @@
+.comingsoon-page nav ul li{
+    display: none;
+}
+
+.comingsoon-page .overlay{
+    padding-top: 230px;
+}
+
+.comingsoon-page .error{
+    display: none;
+}
+
+.comingsoon-page .banner-part{
+    height: 100vh;
+}
+
+.comingsoon-page .ericon i{
+    width: 60px;
+    height: 60px;
+    background: #fff;
+    border-radius: 50%;
+    text-align: center;
+    line-height: 60px;
+    color: #0f2f44;
+    font-size: 20px;
+    margin: 0 8px;
+}
+
+.comingsoon-page .icon {
+    top: 74%;
+    left: 100%;
+}
+
+.comingsoon-page .ericon{
+    margin-top: 30px;
+    display: block;
+}
+
+.comingsoon-page .ericon i:hover{
+    background: linear-gradient(to right,#ffe169, #ffa913);;
+}
+
+.comingsoon-page .form{
+    margin-top: 40px;
+    position: relative;
+    display: inline-block;
+}
+
+.comingsoon-page input{
+    display: inline-block;
+    width: 600px;
+    background: transparent;
+    border: 1px solid rgba(255, 255, 255,.15);
+    padding: 25px 20px;
+    outline: 0;
+    color: #fff;
+    
+}
+
+.comingsoon-page input::placeholder{
+    color: #fff;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 20px;
+}
+
+.comingsoon-page .form button{
+    border: 0;
+    padding: 10px 30px;
+    background: linear-gradient(to right,#ffe169, #ffa913);
+    border-radius: 5px;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 800;
+    font-size: 24px;
+    color: #fff;
+    text-transform: uppercase;
+    outline: 0;
+    position: absolute;
+    top: 50%;
+    right: 0;    
+    transform: translate(50%,-50%);
+}
+
+.comingsoon-page .sub{
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 20px;
+    letter-spacing: normal;
+    text-align: left;
+    width: 600px;
+    margin: 0 auto;
+    padding-top: 20px;
+    display: block;
+}
+
+.comingsoon-page .errortitle{
+    font-size: 42px;
+   padding-bottom: 35px;
+}
+
+.comingsoon-page .gohome{
+    font-size: 24px;
+    width: 652px;
+    margin: 0 auto;
+    letter-spacing: normal;
+    line-height: 35px;
+    padding-top: 40px;
+}
+
+.comingsoon-page .gohome span a{
+    text-transform: uppercase;
+    color: #ffe169;
+    margin: 0 5px;
+}
+
+.comingsoon-page .homebanner{
+    display: block;
+}
+
+.comingsoon-page .counterdown{
+    display: flex;
+    margin-top: 40px;
+}
+
+.comingsoon-page h1{
+    padding-bottom: 0;
+}
