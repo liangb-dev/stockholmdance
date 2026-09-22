@@ -9,6 +9,7 @@ import {
   shiftStockholmDays,
 } from "../../lib/today";
 import { stockholmDateKey } from "../../lib/highlights";
+import { CALENDAR_SUBSCRIBE_URL } from "../../site";
 
 const KIND_LABEL = {
   bachata: "Bachata",
@@ -177,6 +178,11 @@ function CalendarSection() {
             </ol>
           </div>
         )}
+        <p className="calendar-subscribe">
+          <a href={CALENDAR_SUBSCRIBE_URL} target="_blank" rel="noreferrer">
+            Add to Google Calendar
+          </a>
+        </p>
       </div>
 
       <dialog

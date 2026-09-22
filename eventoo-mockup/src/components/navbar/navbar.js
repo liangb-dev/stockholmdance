@@ -1,6 +1,4 @@
 import React, { useState } from "react";
-import Button from "./registerbutton/navbtn";
-import { CALENDAR_SUBSCRIBE_URL } from "../../site";
 
 function Navbar(props) {
   const [open, setOpen] = useState(false);
@@ -34,9 +32,6 @@ function Navbar(props) {
         >
           <ul className="navbar-nav ml-auto">
             {navItem}
-            <a href={CALENDAR_SUBSCRIBE_URL}>
-              <Button />
-            </a>
           </ul>
         </div>
       </div>

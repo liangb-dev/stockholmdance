@@ -7,12 +7,9 @@ function footer(props) {
   return (
     <section style={props.bg} className="footer-part" id="contact">
       <div className="title">
-        <p>keep the week in your phone</p>
-        <h2>Subscribe to the calendar</h2>
+        <p>stockholm dance calendar</p>
+        <h2>See you on the floor</h2>
       </div>
-      <a className="footer-cta" href={CALENDAR_SUBSCRIBE_URL}>
-        Subscribe
-      </a>
       <div className="fotermenu">
         <ul>
           <li>

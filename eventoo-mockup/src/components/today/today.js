@@ -147,8 +147,7 @@ function TodaySection() {
         ) : null}
         {status === "ready" && payload.events.length === 0 ? (
           <p className="today-status">
-            Quiet floor tonight. Check the week view, or subscribe so the next
-            social doesn’t sneak by.
+            Quiet floor tonight. Check the week view below.
           </p>
         ) : null}
         {status === "ready" && payload.events.length > 0 ? (

@@ -1,7 +1,5 @@
 import React from "react";
 import BannerText from "./banner-text";
-import Button from "../navbar/registerbutton/navbtn";
-import { CALENDAR_SUBSCRIBE_URL } from "../../site";
 
 function banner(props) {
   return (
@@ -13,9 +11,6 @@ function banner(props) {
             heading={props.text.heading}
             details={props.text.details}
           />
-          <a className="banner-cta" href={CALENDAR_SUBSCRIBE_URL}>
-            <Button />
-          </a>
         </div>
       </div>
     </section>
