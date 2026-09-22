@@ -172,6 +172,12 @@ html {
   color: #0f2f44;
 }
 
+.week-rows-nav.is-active {
+  border-color: #0f2f44;
+  background: #0f2f44;
+  color: #fff;
+}
+
 .week-rows {
   list-style: none;
   margin: 0;
@@ -448,12 +454,25 @@ html {
 }
 
 .today-kind {
-  padding: 1px 8px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  min-height: 1.55em;
+  padding: 0 0.72em;
   border-radius: 999px;
   font-size: 12px;
   font-weight: 800;
-  letter-spacing: 0.08em;
+  line-height: 1;
   text-transform: uppercase;
+  vertical-align: middle;
+}
+
+.today-kind-label {
+  display: inline-block;
+  letter-spacing: 0.08em;
+  /* Optical center for condensed caps + trailing letter-spacing */
+  transform: translate(0.04em, -0.03em);
 }
 
 .today-kind-bachata {
@@ -478,6 +497,10 @@ html {
 
 .highlights-part {
   margin-top: 80px;
+  padding: 56px 0 64px;
+  background: #eef2f5;
+  border-top: 1px solid #dde3e8;
+  border-bottom: 1px solid #dde3e8;
 }
 
 .highlights-part .title p {

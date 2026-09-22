@@ -46,7 +46,11 @@ function EventRow({ event, onOpen }) {
             {event.priceLabel ? (
               <span className="today-price">{event.priceLabel}</span>
             ) : null}
-            {kind ? <span className={`today-kind today-kind-${kind}`}>{KIND_LABEL[kind]}</span> : null}
+            {kind ? (
+              <span className={`today-kind today-kind-${kind}`}>
+                <span className="today-kind-label">{KIND_LABEL[kind]}</span>
+              </span>
+            ) : null}
             {event.isRecurring ? <span>Weekly</span> : null}
           </p>
         </div>

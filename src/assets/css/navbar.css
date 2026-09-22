@@ -10,6 +10,17 @@
     z-index: 9999;
 }
 
+.navbar-backdrop {
+    position: fixed;
+    inset: 0;
+    z-index: 9998;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    cursor: default;
+}
+
 nav ul li{
     margin-right: 46px;
     line-height: 3;
