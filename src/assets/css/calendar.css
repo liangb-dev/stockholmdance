@@ -458,14 +458,21 @@ html {
   align-items: center;
   justify-content: center;
   box-sizing: border-box;
-  padding: 0.22em 0.7em 0.16em;
+  min-height: 1.55em;
+  padding: 0 0.72em;
   border-radius: 999px;
   font-size: 12px;
   font-weight: 800;
-  letter-spacing: 0.08em;
   line-height: 1;
   text-transform: uppercase;
   vertical-align: middle;
+}
+
+.today-kind-label {
+  display: inline-block;
+  letter-spacing: 0.08em;
+  /* Optical center for condensed caps + trailing letter-spacing */
+  transform: translate(0.04em, -0.03em);
 }
 
 .today-kind-bachata {
