@@ -491,11 +491,9 @@ html {
 .highlights-part {
   margin-top: 80px;
   padding: 56px 0 64px;
-  background:
-    linear-gradient(180deg, rgba(15, 47, 68, 0.035), rgba(15, 47, 68, 0.02)),
-    #f3f6f8;
-  border-top: 1px solid #e4e9ed;
-  border-bottom: 1px solid #e4e9ed;
+  background: #eef2f5;
+  border-top: 1px solid #dde3e8;
+  border-bottom: 1px solid #dde3e8;
 }
 
 .highlights-part .title p {

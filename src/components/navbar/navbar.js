@@ -21,10 +21,10 @@ function Navbar(props) {
       }
     };
 
-    document.addEventListener("pointerdown", onPointerDown);
+    document.addEventListener("pointerdown", onPointerDown, true);
     document.addEventListener("keydown", onKeyDown);
     return () => {
-      document.removeEventListener("pointerdown", onPointerDown);
+      document.removeEventListener("pointerdown", onPointerDown, true);
       document.removeEventListener("keydown", onKeyDown);
     };
   }, [open]);
@@ -38,31 +38,41 @@ function Navbar(props) {
   ));
 
   return (
-    <nav className="navbar navbar-expand-lg" id="home" ref={navRef}>
-      <div className="container">
-        <a className="navbar-brand" href="#home">
-          <img src={props.logo} alt="Stockholm Bachata & Salsa" />
-        </a>
+    <>
+      {open ? (
         <button
-          className="navbar-toggler"
           type="button"
-          aria-label="Toggle navigation"
-          aria-expanded={open}
-          onClick={() => setOpen((value) => !value)}
-        >
-          <i className="fa fa-bars" aria-hidden="true"></i>
-        </button>
+          className="navbar-backdrop"
+          aria-label="Close menu"
+          onClick={() => setOpen(false)}
+        />
+      ) : null}
+      <nav className="navbar navbar-expand-lg" id="home" ref={navRef}>
+        <div className="container">
+          <a className="navbar-brand" href="#home">
+            <img src={props.logo} alt="Stockholm Bachata & Salsa" />
+          </a>
+          <button
+            className="navbar-toggler"
+            type="button"
+            aria-label="Toggle navigation"
+            aria-expanded={open}
+            onClick={() => setOpen((value) => !value)}
+          >
+            <i className="fa fa-bars" aria-hidden="true"></i>
+          </button>
 
-        <div
-          className={`collapse navbar-collapse${open ? " show" : ""}`}
-          id="navbarSupportedContent"
-        >
-          <ul className="navbar-nav ml-auto">
-            {navItem}
-          </ul>
+          <div
+            className={`collapse navbar-collapse${open ? " show" : ""}`}
+            id="navbarSupportedContent"
+          >
+            <ul className="navbar-nav ml-auto">
+              {navItem}
+            </ul>
+          </div>
         </div>
-      </div>
-    </nav>
+      </nav>
+    </>
   );
 }
 
