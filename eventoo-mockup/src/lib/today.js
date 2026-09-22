@@ -294,25 +294,45 @@ export function shiftStockholmDays(date, days) {
 export function getMondayWeek(date = new Date()) {
   const offset = (stockholmWeekday(date) + 6) % 7;
 
-  return Array.from({ length: 7 }, (_, index) => {
-    const dayDate = shiftStockholmDays(date, index - offset);
-    const parts = calendarParts(dayDate);
-    return {
-      key: stockholmDateKey(dayDate),
-      date: dayDate,
-      day: parts.day,
-      weekday: new Intl.DateTimeFormat("en-GB", {
-        timeZone: TIMEZONE,
-        weekday: "short",
-      }).format(dayDate),
-      weekdayLong: new Intl.DateTimeFormat("en-GB", {
-        timeZone: TIMEZONE,
-        weekday: "long",
-      }).format(dayDate),
-      start: zonedLocalToUtc(parts.year, parts.month, parts.day),
-      end: zonedLocalToUtc(parts.year, parts.month, parts.day, 23, 59, 59),
-    };
-  });
+  return Array.from({ length: 7 }, (_, index) =>
+    toCalendarDay(shiftStockholmDays(date, index - offset)),
+  );
+}
+
+function toCalendarDay(dayDate) {
+  const parts = calendarParts(dayDate);
+  return {
+    key: stockholmDateKey(dayDate),
+    date: dayDate,
+    day: parts.day,
+    weekday: new Intl.DateTimeFormat("en-GB", {
+      timeZone: TIMEZONE,
+      weekday: "short",
+    }).format(dayDate),
+    weekdayLong: new Intl.DateTimeFormat("en-GB", {
+      timeZone: TIMEZONE,
+      weekday: "long",
+    }).format(dayDate),
+    start: zonedLocalToUtc(parts.year, parts.month, parts.day),
+    end: zonedLocalToUtc(parts.year, parts.month, parts.day, 23, 59, 59),
+  };
+}
+
+export function getStockholmMonth(date = new Date()) {
+  const parts = calendarParts(date);
+  const lastDay = new Date(Date.UTC(parts.year, parts.month, 0, 12)).getUTCDate();
+
+  return Array.from({ length: lastDay }, (_, index) =>
+    toCalendarDay(new Date(Date.UTC(parts.year, parts.month - 1, index + 1, 12))),
+  );
+}
+
+export function formatMonthLabel(date = new Date()) {
+  return new Intl.DateTimeFormat("en-GB", {
+    timeZone: TIMEZONE,
+    month: "long",
+    year: "numeric",
+  }).format(date);
 }
 
 export function formatWeekRangeLabel(days) {

@@ -98,8 +98,22 @@ html {
   background: #fff;
 }
 
-.week-rows-frame {
+.sx-month-frame {
   overflow: hidden;
+}
+
+.sx-month-frame .sx-react-calendar-wrapper {
+  width: 100%;
+  height: min(78vh, 860px);
+  min-height: 560px;
+  --sx-color-primary: #6e06ae;
+  --sx-color-primary-container: #f3e8ff;
+  font-family: "Barlow Condensed", sans-serif;
+}
+
+.sx-month-frame .sx__view-selection,
+.sx-month-frame .sx__range-heading {
+  display: none;
 }
 
 .calendar-subscribe {
@@ -139,7 +153,7 @@ html {
   font-size: 22px;
   font-weight: 800;
   color: #0f2f44;
-  text-align: center;
+  text-align: left;
 }
 
 .week-rows-toolbar-end {

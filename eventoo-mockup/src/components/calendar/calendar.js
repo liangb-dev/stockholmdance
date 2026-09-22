@@ -1,12 +1,25 @@
+import "temporal-polyfill/global";
 import React, { useEffect, useId, useMemo, useRef, useState } from "react";
+import { useCalendarApp, ScheduleXCalendar } from "@schedule-x/react";
+import {
+  createViewMonthAgenda,
+  createViewMonthGrid,
+  viewMonthGrid,
+} from "@schedule-x/calendar";
+import { createEventsServicePlugin } from "@schedule-x/events-service";
+import "@schedule-x/theme-default/dist/index.css";
 import {
   displayTitle,
   eventKind,
   formatEventClocks,
+  formatMonthLabel,
   formatWeekRangeLabel,
   getMondayWeek,
+  getStockholmMonth,
   parseEventsInRange,
   shiftStockholmDays,
+  temporalToDate,
+  toScheduleXEvents,
 } from "../../lib/today";
 import { stockholmDateKey } from "../../lib/highlights";
 import { CALENDAR_SUBSCRIBE_URL } from "../../site";
@@ -18,6 +31,121 @@ const KIND_LABEL = {
   zouk: "Zouk",
 };
 
+const calendars = {
+  bachata: {
+    colorName: "bachata",
+    lightColors: {
+      main: "#c2410c",
+      container: "#ffedd5",
+      onContainer: "#7c2d12",
+    },
+  },
+  salsa: {
+    colorName: "salsa",
+    lightColors: {
+      main: "#e11d48",
+      container: "#ffe4e6",
+      onContainer: "#9f1239",
+    },
+  },
+  kizomba: {
+    colorName: "kizomba",
+    lightColors: {
+      main: "#7c3aed",
+      container: "#f3e8ff",
+      onContainer: "#5b21b6",
+    },
+  },
+  zouk: {
+    colorName: "zouk",
+    lightColors: {
+      main: "#2563eb",
+      container: "#dbeafe",
+      onContainer: "#1e40af",
+    },
+  },
+  other: {
+    colorName: "other",
+    lightColors: {
+      main: "#0f2f44",
+      container: "#e8eef2",
+      onContainer: "#0f2f44",
+    },
+  },
+};
+
+function clocksFor(active) {
+  if (!active) {
+    return null;
+  }
+  if (typeof active.start?.hour === "number") {
+    return {
+      start: `${String(active.start.hour).padStart(2, "0")}:${String(active.start.minute).padStart(2, "0")}`,
+      end:
+        typeof active.end?.hour === "number"
+          ? `${String(active.end.hour).padStart(2, "0")}:${String(active.end.minute).padStart(2, "0")}`
+          : "",
+    };
+  }
+  return formatEventClocks(active);
+}
+
+function MonthGrid({ ics, onEventClick, onMonthLabel }) {
+  const icsRef = useRef(ics);
+  icsRef.current = ics;
+  const eventsService = useState(() => createEventsServicePlugin())[0];
+
+  const calendar = useCalendarApp(
+    {
+      views: [createViewMonthGrid(), createViewMonthAgenda()],
+      defaultView: viewMonthGrid.name,
+      locale: "en-GB",
+      timezone: "Europe/Stockholm",
+      firstDayOfWeek: 1,
+      calendars,
+      events: [],
+      callbacks: {
+        onRangeUpdate(range) {
+          const start = temporalToDate(range.start);
+          onMonthLabel(
+            formatMonthLabel(new Date(start.getTime() + 10 * 86400000)),
+          );
+          if (!icsRef.current) {
+            return;
+          }
+          eventsService.set(
+            toScheduleXEvents(
+              parseEventsInRange(
+                icsRef.current,
+                start,
+                temporalToDate(range.end),
+              ),
+            ),
+          );
+        },
+        onEventClick(calendarEvent) {
+          onEventClick(calendarEvent);
+        },
+      },
+    },
+    [eventsService],
+  );
+
+  useEffect(() => {
+    if (!calendar || !ics) {
+      return;
+    }
+    const month = getStockholmMonth();
+    eventsService.set(
+      toScheduleXEvents(
+        parseEventsInRange(ics, month[0].start, month[month.length - 1].end),
+      ),
+    );
+  }, [calendar, eventsService, ics]);
+
+  return calendar ? <ScheduleXCalendar calendarApp={calendar} /> : null;
+}
+
 function CalendarSection() {
   const dialogRef = useRef(null);
   const titleId = useId();
@@ -25,7 +153,9 @@ function CalendarSection() {
   const [status, setStatus] = useState("loading");
   const [active, setActive] = useState(null);
   const [anchor, setAnchor] = useState(() => new Date());
+  const [span, setSpan] = useState("week");
   const [icsVersion, setIcsVersion] = useState(0);
+  const [monthLabel, setMonthLabel] = useState(() => formatMonthLabel());
 
   const days = useMemo(() => getMondayWeek(anchor), [anchor]);
   const todayKey = stockholmDateKey();
@@ -90,92 +220,124 @@ function CalendarSection() {
     }
   }, [active]);
 
-  const clocks = active ? formatEventClocks(active) : null;
-  const kind = active ? eventKind(active.title) : null;
+  const clocks = clocksFor(active);
+  const kind = active
+    ? active.calendarId && active.calendarId !== "other"
+      ? active.calendarId
+      : eventKind(active.title || active.rawTitle || "")
+    : null;
 
   return (
     <section className="calendar-part" id="week">
       <div className="title text-center">
         <p>Stockholm time · week starts Monday</p>
-        <h1>This week on the floor</h1>
+        <h1>{span === "month" ? "This month on the floor" : "This week on the floor"}</h1>
       </div>
       <div className="container">
         {status === "error" ? (
           <p className="today-status">Could not load the week view from the calendar feed.</p>
         ) : (
-          <div className="calendar-frame week-rows-frame">
+          <div
+            className={
+              span === "month"
+                ? "calendar-frame sx-month-frame"
+                : "calendar-frame week-rows-frame"
+            }
+          >
             <div className="week-rows-toolbar">
-              <button
-                type="button"
-                className="week-rows-nav"
-                onClick={() => setAnchor((current) => shiftStockholmDays(current, -7))}
-              >
-                Previous week
-              </button>
-              <p className="week-rows-label">{formatWeekRangeLabel(days)}</p>
+              <p className="week-rows-label">
+                {span === "month" ? monthLabel : formatWeekRangeLabel(days)}
+              </p>
               <div className="week-rows-toolbar-end">
                 <button
                   type="button"
                   className="week-rows-nav"
-                  onClick={() => setAnchor(new Date())}
+                  onClick={() => {
+                    setSpan("week");
+                    setAnchor(new Date());
+                  }}
                 >
                   This week
                 </button>
                 <button
                   type="button"
                   className="week-rows-nav"
-                  onClick={() => setAnchor((current) => shiftStockholmDays(current, 7))}
+                  onClick={() => {
+                    setSpan("week");
+                    setAnchor((current) =>
+                      shiftStockholmDays(span === "month" ? new Date() : current, 7),
+                    );
+                  }}
                 >
                   Next week
                 </button>
+                <button
+                  type="button"
+                  className="week-rows-nav"
+                  onClick={() => {
+                    setSpan("month");
+                    setAnchor(new Date());
+                    setMonthLabel(formatMonthLabel());
+                  }}
+                >
+                  This month
+                </button>
               </div>
             </div>
-            <ol className="week-rows">
-              {days.map((day) => {
-                const events = eventsByDay[day.key] || [];
-                return (
-                  <li
-                    key={day.key}
-                    className={day.key === todayKey ? "week-row is-today" : "week-row"}
-                  >
-                    <div className="week-row-day">
-                      <span className="week-row-weekday">{day.weekday}</span>
-                      <span className="week-row-date">{day.day}</span>
-                    </div>
-                    <div className="week-row-events">
-                      {events.length === 0 ? (
-                        <p className="week-row-empty">Quiet night</p>
-                      ) : (
-                        events.map((event) => {
-                          const eventKindName = eventKind(event.title);
-                          const eventClocks = formatEventClocks(event);
-                          return (
-                            <button
-                              key={event.id}
-                              type="button"
-                              className={`week-event week-event-${eventKindName || "other"}`}
-                              onClick={() => setActive(event)}
-                            >
-                              <span className="week-event-time">
-                                {eventClocks.end
-                                  ? `${eventClocks.start}–${eventClocks.end}`
-                                  : eventClocks.start}
-                              </span>
-                              <span className="week-event-title">
-                                {displayTitle(event.title)}
-                              </span>
-                              {event.location ? (
-                                <span className="week-event-venue">{event.location}</span>
-                              ) : null}
-                            </button>
-                          );
-                        })
-                      )}
-                    </div>
-                  </li>
-                );
-              })}
-            </ol>
+            {span === "month" ? (
+              <MonthGrid
+                ics={icsRef.current}
+                onEventClick={setActive}
+                onMonthLabel={setMonthLabel}
+              />
+            ) : (
+              <ol className="week-rows">
+                {days.map((day) => {
+                  const events = eventsByDay[day.key] || [];
+                  return (
+                    <li
+                      key={day.key}
+                      className={day.key === todayKey ? "week-row is-today" : "week-row"}
+                    >
+                      <div className="week-row-day">
+                        <span className="week-row-weekday">{day.weekday}</span>
+                        <span className="week-row-date">{day.day}</span>
+                      </div>
+                      <div className="week-row-events">
+                        {events.length === 0 ? (
+                          <p className="week-row-empty">Quiet night</p>
+                        ) : (
+                          events.map((event) => {
+                            const eventKindName = eventKind(event.title);
+                            const eventClocks = formatEventClocks(event);
+                            return (
+                              <button
+                                key={event.id}
+                                type="button"
+                                className={`week-event week-event-${eventKindName || "other"}`}
+                                onClick={() => setActive(event)}
+                              >
+                                <span className="week-event-time">
+                                  {eventClocks.end
+                                    ? `${eventClocks.start}–${eventClocks.end}`
+                                    : eventClocks.start}
+                                </span>
+                                <span className="week-event-title">
+                                  {displayTitle(event.title)}
+                                </span>
+                                {event.location ? (
+                                  <span className="week-event-venue">{event.location}</span>
+                                ) : null}
+                              </button>
+                            );
+                          })
+                        )}
+                      </div>
+                    </li>
+                  );
+                })}
+              </ol>
+            )}
           </div>
         )}
         <p className="calendar-subscribe">
@@ -200,7 +362,7 @@ function CalendarSection() {
           <>
             <div className="highlight-dialog-head">
               <p className="highlight-meta">
-                <time dateTime={active.start}>
+                <time dateTime={String(active.start || "")}>
                   {clocks.end ? `${clocks.start}–${clocks.end}` : clocks.start}
                 </time>
                 {kind ? (
@@ -210,7 +372,7 @@ function CalendarSection() {
                   </>
                 ) : null}
               </p>
-              <h3 id={titleId}>{displayTitle(active.title)}</h3>
+              <h3 id={titleId}>{displayTitle(active.title || "")}</h3>
             </div>
             <div className="highlight-dialog-body">
               {active.location ? <p className="highlight-venue">{active.location}</p> : null}
