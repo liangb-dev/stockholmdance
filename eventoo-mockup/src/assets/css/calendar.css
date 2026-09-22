@@ -113,12 +113,185 @@ html {
   background: #fff;
 }
 
-.calendar-frame iframe {
-  display: block;
-  width: 100%;
-  height: min(72vh, 820px);
-  min-height: 520px;
+.week-rows-frame {
+  overflow: hidden;
+}
+
+.week-rows-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 16px 20px;
+  border-bottom: 1px solid #f1f1f1;
+}
+
+.week-rows-label {
+  margin: 0;
+  font-family: "Barlow Condensed", sans-serif;
+  font-size: 22px;
+  font-weight: 800;
+  color: #0f2f44;
+  text-align: center;
+}
+
+.week-rows-toolbar-end {
+  display: flex;
+  gap: 8px;
+}
+
+.week-rows-nav {
+  border: 1px solid #ece7df;
+  background: #fff;
+  border-radius: 5px;
+  padding: 8px 12px;
+  font-family: "Barlow Condensed", sans-serif;
+  font-size: 16px;
+  font-weight: 700;
+  color: #0f2f44;
+}
+
+.week-rows {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.week-row {
+  display: grid;
+  grid-template-columns: 88px minmax(0, 1fr);
+  gap: 16px;
+  padding: 14px 20px;
+  border-bottom: 1px solid #f5f2ec;
+  align-items: start;
+}
+
+.week-row:last-child {
+  border-bottom: 0;
+}
+
+.week-row.is-today {
+  background: rgba(110, 6, 174, 0.04);
+}
+
+.week-row-day {
+  display: flex;
+  flex-direction: column;
+  padding-top: 4px;
+}
+
+.week-row-weekday {
+  font-family: "Barlow Condensed", sans-serif;
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #9ca3af;
+}
+
+.week-row.is-today .week-row-weekday {
+  color: #6e06ae;
+}
+
+.week-row-date {
+  font-family: "Barlow Condensed", sans-serif;
+  font-size: 28px;
+  font-weight: 800;
+  line-height: 1;
+  color: #0f2f44;
+}
+
+.week-row-events {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  min-height: 44px;
+}
+
+.week-row-empty {
+  margin: 0;
+  padding-top: 10px;
+  font-family: "Barlow Condensed", sans-serif;
+  font-size: 16px;
+  color: #9ca3af;
+}
+
+.week-event {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+  min-width: min(220px, 100%);
+  max-width: 100%;
+  padding: 10px 12px;
   border: 0;
+  border-radius: 8px;
+  text-align: left;
+  border-left: 4px solid #0f2f44;
+  background: #e8eef2;
+  color: #0f2f44;
+}
+
+.week-event-time {
+  font-family: "Barlow Condensed", sans-serif;
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+}
+
+.week-event-title {
+  font-family: "Barlow Condensed", sans-serif;
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.week-event-venue {
+  font-family: "Barlow Condensed", sans-serif;
+  font-size: 14px;
+  color: inherit;
+  opacity: 0.75;
+}
+
+.week-event-bachata {
+  background: #ffedd5;
+  border-left-color: #c2410c;
+  color: #7c2d12;
+}
+
+.week-event-salsa {
+  background: #ffe4e6;
+  border-left-color: #e11d48;
+  color: #9f1239;
+}
+
+.week-event-kizomba {
+  background: #f3e8ff;
+  border-left-color: #7c3aed;
+  color: #5b21b6;
+}
+
+.week-event-zouk {
+  background: #dbeafe;
+  border-left-color: #2563eb;
+  color: #1e40af;
+}
+
+@media (max-width: 767px) {
+  .week-rows-toolbar {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .week-row {
+    grid-template-columns: 64px minmax(0, 1fr);
+    padding: 14px 12px;
+    gap: 10px;
+  }
+
+  .week-event {
+    min-width: 100%;
+  }
 }
 
 .footer-cta {

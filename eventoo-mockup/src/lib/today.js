@@ -1,6 +1,7 @@
 import {
   cleanEventDescription,
   cleanHighlightTitle,
+  inclusiveEndDateKey,
   parseSourceUrl,
   stockholmDateKey,
 } from "./highlights";
@@ -285,6 +286,57 @@ export function formatTodayLabel(date = new Date()) {
   }).format(date);
 }
 
+export function shiftStockholmDays(date, days) {
+  const parts = calendarParts(date);
+  return new Date(Date.UTC(parts.year, parts.month - 1, parts.day + days, 12));
+}
+
+export function getMondayWeek(date = new Date()) {
+  const offset = (stockholmWeekday(date) + 6) % 7;
+
+  return Array.from({ length: 7 }, (_, index) => {
+    const dayDate = shiftStockholmDays(date, index - offset);
+    const parts = calendarParts(dayDate);
+    return {
+      key: stockholmDateKey(dayDate),
+      date: dayDate,
+      day: parts.day,
+      weekday: new Intl.DateTimeFormat("en-GB", {
+        timeZone: TIMEZONE,
+        weekday: "short",
+      }).format(dayDate),
+      weekdayLong: new Intl.DateTimeFormat("en-GB", {
+        timeZone: TIMEZONE,
+        weekday: "long",
+      }).format(dayDate),
+      start: zonedLocalToUtc(parts.year, parts.month, parts.day),
+      end: zonedLocalToUtc(parts.year, parts.month, parts.day, 23, 59, 59),
+    };
+  });
+}
+
+export function formatWeekRangeLabel(days) {
+  const first = days[0]?.date;
+  const last = days[6]?.date;
+  if (!first || !last) {
+    return "";
+  }
+
+  const start = new Intl.DateTimeFormat("en-GB", {
+    timeZone: TIMEZONE,
+    day: "numeric",
+    month: "short",
+  }).format(first);
+  const end = new Intl.DateTimeFormat("en-GB", {
+    timeZone: TIMEZONE,
+    day: "numeric",
+    month: "short",
+    year: "numeric",
+  }).format(last);
+
+  return `${start} – ${end}`;
+}
+
 function stockholmWeekday(date) {
   const { year, month, day } = calendarParts(date);
   return new Date(Date.UTC(year, month - 1, day, 12)).getUTCDay();
@@ -305,29 +357,72 @@ function overlapsDay(start, end, dayStart, dayEnd) {
   return start.getTime() < dayEnd.getTime() && end.getTime() > dayStart.getTime();
 }
 
-function weeklyInstance(start, end, todayParts) {
+function weeklyInstance(start, end, dayParts) {
   const clock = clockParts(start);
   const instanceStart = zonedLocalToUtc(
-    todayParts.year,
-    todayParts.month,
-    todayParts.day,
+    dayParts.year,
+    dayParts.month,
+    dayParts.day,
     clock.hour,
     clock.minute,
     clock.second,
   );
-  const instanceEnd = new Date(instanceStart.getTime() + (end.getTime() - start.getTime()));
+  const instanceEnd = new Date(
+    instanceStart.getTime() + (end.getTime() - start.getTime()),
+  );
   return { start: instanceStart, end: instanceEnd };
 }
 
-export function parseTodaysEvents(ics, now = new Date()) {
+function shiftDateKey(dateKey, deltaDays) {
+  const date = new Date(`${dateKey}T12:00:00Z`);
+  date.setUTCDate(date.getUTCDate() + deltaDays);
+  return date.toISOString().slice(0, 10);
+}
+
+function eachStockholmDay(from, to) {
+  const days = [];
+  let key = stockholmDateKey(from);
+  const endKey = stockholmDateKey(to);
+
+  while (key <= endKey) {
+    const [year, month, day] = key.split("-").map(Number);
+    days.push({ year, month, day, key });
+    key = shiftDateKey(key, 1);
+  }
+
+  return days;
+}
+
+function toEventRecord({
+  uid,
+  summary,
+  location,
+  start,
+  end,
+  isAllDay,
+  isRecurring,
+  rawDescription,
+}) {
+  return {
+    id: `${uid}-${start.getTime()}`,
+    title: summary,
+    location,
+    start: start.toISOString(),
+    end: end.toISOString(),
+    isAllDay,
+    isRecurring,
+    priceLabel: parseEventPrice(rawDescription),
+    phases: parseEventPhases(rawDescription),
+    sourceUrl: parseSourceUrl(rawDescription),
+    description: cleanEventDescription(rawDescription),
+  };
+}
+
+export function parseEventsInRange(ics, from, to) {
   const unfolded = unfoldIcs(ics);
-  const todayParts = calendarParts(now);
-  const todayKey = stockholmDateKey(now);
-  const todayWeekday = stockholmWeekday(now);
-  const dayStart = zonedLocalToUtc(todayParts.year, todayParts.month, todayParts.day);
-  const dayEnd = zonedLocalToUtc(todayParts.year, todayParts.month, todayParts.day, 23, 59, 59);
   const seen = new Set();
   const events = [];
+  const days = eachStockholmDay(from, to);
 
   for (const chunk of unfolded.split("BEGIN:VEVENT").slice(1)) {
     const block = chunk.split("END:VEVENT")[0] || "";
@@ -345,7 +440,9 @@ export function parseTodaysEvents(ics, now = new Date()) {
 
     const startProp = eventProp(block, "DTSTART");
     const endProp = eventProp(block, "DTEND");
-    const startParsed = startProp ? parseDateValue(startProp.params, startProp.value) : null;
+    const startParsed = startProp
+      ? parseDateValue(startProp.params, startProp.value)
+      : null;
     if (!startParsed) {
       continue;
     }
@@ -359,42 +456,66 @@ export function parseTodaysEvents(ics, now = new Date()) {
 
     const rrule = eventProp(block, "RRULE")?.value || "";
     const uid = eventProp(block, "UID")?.value || summary;
-    let instanceStart = startParsed.date;
-    let instanceEnd = endParsed.date;
-    let isRecurring = Boolean(rrule);
+    const location = shortLocation(eventProp(block, "LOCATION")?.value || "");
+    const rawDescription = eventProp(block, "DESCRIPTION")?.value || "";
+    const push = (start, end, isRecurring) => {
+      const record = toEventRecord({
+        uid,
+        summary,
+        location,
+        start,
+        end,
+        isAllDay: startParsed.allDay,
+        isRecurring,
+        rawDescription,
+      });
+      if (seen.has(record.id)) {
+        return;
+      }
+      seen.add(record.id);
+      events.push(record);
+    };
 
     if (rrule) {
       const rule = rruleMap(rrule);
       if (rule.FREQ !== "WEEKLY") {
-        if (!overlapsDay(startParsed.date, endParsed.date, dayStart, dayEnd)) {
-          continue;
+        if (overlapsDay(startParsed.date, endParsed.date, from, to)) {
+          push(startParsed.date, endParsed.date, true);
         }
-      } else {
-        const days = (rule.BYDAY || "")
-          .split(",")
-          .map((code) => WEEKDAY[code.slice(-2)])
-          .filter((day) => day !== undefined);
+        continue;
+      }
+
+      const weekdays = (rule.BYDAY || "")
+        .split(",")
+        .map((code) => WEEKDAY[code.slice(-2)])
+        .filter((day) => day !== undefined);
+      const until = rule.UNTIL ? parseDateValue("", rule.UNTIL) : null;
+      const interval = Number(rule.INTERVAL || "1");
+      const startKey = stockholmDateKey(startParsed.date);
+      const exdates = new Set(
+        eventProps(block, "EXDATE")
+          .flatMap((item) =>
+            item.value.split(",").map((stamp) => parseDateValue(item.params, stamp)),
+          )
+          .filter(Boolean)
+          .map((item) => stockholmDateKey(item.date)),
+      );
+
+      for (const day of days) {
+        const weekday = new Date(Date.UTC(day.year, day.month - 1, day.day, 12)).getUTCDay();
         const matchesDay =
-          days.length > 0
-            ? days.includes(todayWeekday)
-            : stockholmWeekday(startParsed.date) === todayWeekday;
-        if (!matchesDay) {
+          weekdays.length > 0
+            ? weekdays.includes(weekday)
+            : stockholmWeekday(startParsed.date) === weekday;
+        if (!matchesDay || day.key < startKey || exdates.has(day.key)) {
           continue;
         }
-        if (startParsed.date.getTime() > dayEnd.getTime()) {
+        if (until && until.date.getTime() < zonedLocalToUtc(day.year, day.month, day.day).getTime()) {
           continue;
         }
-        if (rule.UNTIL) {
-          const until = parseDateValue("", rule.UNTIL);
-          if (until && until.date.getTime() < dayStart.getTime()) {
-            continue;
-          }
-        }
-        const interval = Number(rule.INTERVAL || "1");
         if (interval > 1) {
-          const startKey = stockholmDateKey(startParsed.date);
           const weeks = Math.round(
-            (Date.parse(`${todayKey}T12:00:00Z`) - Date.parse(`${startKey}T12:00:00Z`)) /
+            (Date.parse(`${day.key}T12:00:00Z`) - Date.parse(`${startKey}T12:00:00Z`)) /
               604800000,
           );
           if (weeks % interval !== 0) {
@@ -402,56 +523,104 @@ export function parseTodaysEvents(ics, now = new Date()) {
           }
         }
 
-        const exdates = eventProps(block, "EXDATE").flatMap((item) =>
-          item.value.split(",").map((stamp) => parseDateValue(item.params, stamp)),
-        );
-        const excluded = exdates.some(
-          (item) => item && stockholmDateKey(item.date) === todayKey,
-        );
-        if (excluded) {
-          continue;
+        const moved = weeklyInstance(startParsed.date, endParsed.date, day);
+        if (overlapsDay(moved.start, moved.end, from, to)) {
+          push(moved.start, moved.end, true);
         }
-
-        const moved = weeklyInstance(startParsed.date, endParsed.date, todayParts);
-        instanceStart = moved.start;
-        instanceEnd = moved.end;
       }
-    } else if (!overlapsDay(startParsed.date, endParsed.date, dayStart, dayEnd)) {
       continue;
     }
 
-    const id = `${uid}-${instanceStart.getTime()}`;
-    if (seen.has(id)) {
-      continue;
+    if (overlapsDay(startParsed.date, endParsed.date, from, to)) {
+      push(startParsed.date, endParsed.date, false);
     }
-    seen.add(id);
-
-    const rawDescription = eventProp(block, "DESCRIPTION")?.value || "";
-    events.push({
-      id,
-      title: summary,
-      location: shortLocation(eventProp(block, "LOCATION")?.value || ""),
-      start: instanceStart.toISOString(),
-      end: instanceEnd.toISOString(),
-      isAllDay: startParsed.allDay,
-      isRecurring,
-      priceLabel: parseEventPrice(rawDescription),
-      phases: parseEventPhases(rawDescription),
-      sourceUrl: parseSourceUrl(rawDescription),
-      description: cleanEventDescription(rawDescription),
-    });
   }
 
+  return events.sort((a, b) => a.start.localeCompare(b.start));
+}
+
+export function parseTodaysEvents(ics, now = new Date()) {
+  const todayParts = calendarParts(now);
+  const dayStart = zonedLocalToUtc(todayParts.year, todayParts.month, todayParts.day);
+  const dayEnd = zonedLocalToUtc(
+    todayParts.year,
+    todayParts.month,
+    todayParts.day,
+    23,
+    59,
+    59,
+  );
+
   return {
-    events: events
-      .filter((event) => event.title)
-      .sort((a, b) => a.start.localeCompare(b.start)),
+    events: parseEventsInRange(ics, dayStart, dayEnd),
     label: formatTodayLabel(now),
-    dateKey: todayKey,
+    dateKey: stockholmDateKey(now),
     fetchedAt: now.toISOString(),
   };
 }
 
 export function displayTitle(title) {
   return cleanHighlightTitle(title);
+}
+
+export function toScheduleXEvents(events) {
+  return events.flatMap((event) => {
+    try {
+      const kind = eventKind(event.title) || "other";
+      const mapped = {
+        id: String(event.id).replace(/[^a-zA-Z0-9_-]/g, "_"),
+        title: displayTitle(event.title),
+        location: event.location,
+        description: event.description,
+        calendarId: kind,
+        sourceUrl: event.sourceUrl,
+        priceLabel: event.priceLabel,
+        phases: event.phases,
+        rawTitle: event.title,
+        _options: {
+          disableDND: true,
+          disableResize: true,
+        },
+      };
+
+      if (event.isAllDay) {
+        const start = new Date(event.start);
+        const end = new Date(event.end);
+        return [
+          {
+            ...mapped,
+            start: Temporal.PlainDate.from(stockholmDateKey(start)),
+            end: Temporal.PlainDate.from(inclusiveEndDateKey(start, end)),
+          },
+        ];
+      }
+
+      return [
+        {
+          ...mapped,
+          start: Temporal.Instant.from(event.start).toZonedDateTimeISO(
+            "Europe/Stockholm",
+          ),
+          end: Temporal.Instant.from(event.end).toZonedDateTimeISO(
+            "Europe/Stockholm",
+          ),
+        },
+      ];
+    } catch {
+      return [];
+    }
+  });
+}
+
+export function temporalToDate(value) {
+  if (!value) {
+    return new Date();
+  }
+  if (typeof value.epochMilliseconds === "number") {
+    return new Date(value.epochMilliseconds);
+  }
+  if (typeof value.toString === "function") {
+    return new Date(value.toString().replace(/\[.*\]$/, ""));
+  }
+  return new Date(value);
 }
