@@ -198,7 +198,8 @@ html {
 }
 
 .week-row.is-today {
-  background: rgba(110, 6, 174, 0.04);
+  background: rgba(110, 6, 174, 0.08);
+  box-shadow: inset 4px 0 0 #ffa201;
 }
 
 .week-row-day {
@@ -217,7 +218,7 @@ html {
 }
 
 .week-row.is-today .week-row-weekday {
-  color: #6e06ae;
+  color: #ffa201;
 }
 
 .week-row-date {
@@ -226,6 +227,10 @@ html {
   font-weight: 800;
   line-height: 1;
   color: #0f2f44;
+}
+
+.week-row.is-today .week-row-date {
+  color: #6e06ae;
 }
 
 .week-row-events {
