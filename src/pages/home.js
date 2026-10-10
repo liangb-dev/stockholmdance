@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import Navbar from "../components/navbar/navbar";
 import Banner from "../components/banner/banner";
 import TodaySection from "../components/today/today";
@@ -15,9 +15,14 @@ import {
 import { FEEDBACK_EMAIL } from "../site";
 
 function home() {
+  const [showOpenHouse, setShowOpenHouse] = useState(true);
+  const links = showOpenHouse
+    ? navitem
+    : navitem.filter((item) => item.link !== "#open-house");
+
   return (
     <div>
-      <Navbar name={navitem} logo={image} />
+      <Navbar name={links} logo={image} />
       <Banner bg={bgimg} text={bannerText} />
       <aside className="site-note">
         <p>
@@ -30,8 +35,8 @@ function home() {
       </aside>
       <TodaySection />
       <CalendarSection />
-      <HighlightsSection />
-      <Footer bg={footerbg} />
+      <HighlightsSection onOpenHouseChange={setShowOpenHouse} />
+      <Footer bg={footerbg} showOpenHouse={showOpenHouse} />
     </div>
   );
 }

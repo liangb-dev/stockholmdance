@@ -4,6 +4,7 @@ html {
 
 #today,
 #week,
+#open-house,
 #highlights,
 #contact {
   scroll-margin-top: 24px;
@@ -506,6 +507,27 @@ html {
   background: #eef2f5;
   border-top: 1px solid #dde3e8;
   border-bottom: 1px solid #dde3e8;
+}
+
+.highlights-part + .highlights-part {
+  margin-top: 0;
+}
+
+.open-house-part {
+  background: #fff8ef;
+  border-top-color: #f3e6d0;
+  border-bottom-color: #f3e6d0;
+}
+
+.open-house-part .highlights-grid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.open-house-part .highlights-grid > li {
+  flex: 1 1 320px;
+  max-width: 420px;
 }
 
 .highlights-part .title p {

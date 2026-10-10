@@ -1,6 +1,7 @@
 const TIMEZONE = "Europe/Stockholm";
 const HIGHLIGHT_TITLE =
   /\b(festival|weekend|cruise|kryssning|congress|bootcamp|intensive)\b/i;
+const OPEN_HOUSE_TITLE = /öppet\s*hus|öppethus|open\s*house/i;
 const WEEKLY_RULE = /FREQ=WEEKLY/i;
 
 export function stockholmDateKey(date = new Date()) {
@@ -49,6 +50,9 @@ export function parseSourceUrl(description) {
 }
 
 export function highlightKindLabel(kind) {
+  if (kind === "open-house") {
+    return "Open house";
+  }
   if (kind === "cruise") {
     return "Cruise";
   }
@@ -56,6 +60,10 @@ export function highlightKindLabel(kind) {
     return "Weekend";
   }
   return "Festival";
+}
+
+export function isOpenHouseTitle(title) {
+  return OPEN_HOUSE_TITLE.test(cleanHighlightTitle(title));
 }
 
 export function detectHighlightKind(title) {
@@ -145,7 +153,7 @@ export function isHighlightCandidate(input) {
   }
 
   const title = cleanHighlightTitle(input.title);
-  if (!title) {
+  if (!title || isOpenHouseTitle(title)) {
     return false;
   }
 
@@ -337,4 +345,187 @@ export function parseHighlights(ics, now = new Date()) {
   }
 
   return upcomingHighlights(todayKey, highlights);
+}
+
+function openHouseGroupKey(title) {
+  const cleaned = cleanHighlightTitle(title).toLowerCase();
+  const at = cleaned.lastIndexOf("@");
+  if (at >= 0) {
+    return cleaned.slice(at + 1).trim();
+  }
+
+  const head = cleaned.split(/öppet\s*hus|öppethus|open\s*house/i)[0] || "";
+  const words = head
+    .replace(/[^\p{L}\p{N}]+/gu, " ")
+    .trim()
+    .split(/\s+/)
+    .filter((word) => word && !/^(gratis|free)$/i.test(word));
+
+  if (words.length > 0) {
+    return words.join(" ");
+  }
+
+  const tail = cleaned.split(/[|@]/).slice(1).join(" ").trim();
+  return tail || cleaned;
+}
+
+function titleStem(title) {
+  return cleanHighlightTitle(title)
+    .replace(/\s*\([^)]*\)/g, "")
+    .replace(/\s+[–—-]\s+/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+function clusterTitle(items) {
+  if (items.length === 1) {
+    return cleanHighlightTitle(items[0].title);
+  }
+
+  const stems = items
+    .map((item) => titleStem(item.title))
+    .filter((stem) => OPEN_HOUSE_TITLE.test(stem));
+  const pool = stems.length > 0 ? stems : items.map((item) => titleStem(item.title));
+  return pool.sort((a, b) => a.length - b.length)[0];
+}
+
+function formatOpenHouseDay(dateKey) {
+  return new Intl.DateTimeFormat("en-GB", {
+    weekday: "short",
+    day: "numeric",
+    month: "short",
+    timeZone: "UTC",
+  }).format(parseDateOnly(dateKey));
+}
+
+function clusterOpenHouses(items) {
+  const groups = new Map();
+  for (const item of items) {
+    const key = openHouseGroupKey(item.title);
+    const group = groups.get(key) || [];
+    group.push(item);
+    groups.set(key, group);
+  }
+
+  const clusters = [];
+  for (const group of groups.values()) {
+    const sorted = group.sort(
+      (a, b) => a.startDate.localeCompare(b.startDate) || a.title.localeCompare(b.title),
+    );
+    let current = [];
+    for (const item of sorted) {
+      const previous = current[current.length - 1];
+      const gap = previous ? daySpanInclusive(previous.startDate, item.startDate) - 1 : 0;
+      if (previous && gap > 2) {
+        clusters.push(current);
+        current = [item];
+      } else {
+        current.push(item);
+      }
+    }
+    if (current.length > 0) {
+      clusters.push(current);
+    }
+  }
+
+  return clusters.map((cluster) => {
+    const venues = [];
+    for (const item of cluster) {
+      if (item.venue && !venues.includes(item.venue)) {
+        venues.push(item.venue);
+      }
+    }
+
+    const description =
+      cluster.length === 1
+        ? cluster[0].description
+        : cluster
+            .map((item) => {
+              const heading = [formatOpenHouseDay(item.startDate), item.venue]
+                .filter(Boolean)
+                .join(" · ");
+              return item.description ? `${heading}\n${item.description}` : heading;
+            })
+            .join("\n\n");
+
+    const endDate = cluster.reduce(
+      (latest, item) => (item.endDate > latest ? item.endDate : latest),
+      cluster[0].endDate,
+    );
+
+    return {
+      id: `open-house-${cluster[0].startDate}-${openHouseGroupKey(cluster[0].title)}`,
+      title: clusterTitle(cluster),
+      kind: "open-house",
+      startDate: cluster[0].startDate,
+      endDate,
+      venue: venues.join(" · "),
+      blurb: highlightBlurb(cluster[0].description),
+      description,
+      sourceUrl: cluster.find((item) => item.sourceUrl)?.sourceUrl || "",
+    };
+  });
+}
+
+export function parseOpenHouses(ics, now = new Date()) {
+  const unfolded = unfoldIcs(ics);
+  const todayKey = stockholmDateKey(now);
+  const horizon = addMonths(now, 18);
+  const seen = new Set();
+  const instances = [];
+
+  for (const chunk of unfolded.split("BEGIN:VEVENT").slice(1)) {
+    const block = chunk.split("END:VEVENT")[0] || "";
+    const status = eventProp(block, "STATUS")?.value || "";
+    if (status === "CANCELLED") {
+      continue;
+    }
+
+    const summary = decodeIcsText(eventProp(block, "SUMMARY")?.value || "").trim();
+    if (!isOpenHouseTitle(summary)) {
+      continue;
+    }
+
+    const rrule = eventProp(block, "RRULE")?.value || "";
+    if (rrule && WEEKLY_RULE.test(rrule)) {
+      continue;
+    }
+
+    const uid = eventProp(block, "UID")?.value || summary;
+    const startProp = eventProp(block, "DTSTART");
+    const endProp = eventProp(block, "DTEND");
+    const startParsed = startProp ? parseDateValue(startProp.value) : null;
+    if (!startParsed) {
+      continue;
+    }
+
+    let endParsed = endProp ? parseDateValue(endProp.value) : null;
+    if (!endParsed) {
+      const end = new Date(startParsed.date.getTime());
+      end.setUTCDate(end.getUTCDate() + (startParsed.allDay ? 1 : 0));
+      endParsed = { date: end, allDay: startParsed.allDay };
+    }
+
+    if (endParsed.date < now || startParsed.date > horizon) {
+      continue;
+    }
+
+    const id = `${uid}-${startParsed.date.getTime()}`;
+    if (seen.has(id)) {
+      continue;
+    }
+    seen.add(id);
+
+    const rawDescription = eventProp(block, "DESCRIPTION")?.value || "";
+    instances.push({
+      title: summary,
+      startDate: stockholmDateKey(startParsed.date),
+      endDate: inclusiveEndDateKey(startParsed.date, endParsed.date),
+      venue: shortLocation(eventProp(block, "LOCATION")?.value || ""),
+      description: cleanEventDescription(rawDescription),
+      sourceUrl: parseSourceUrl(rawDescription),
+    });
+  }
+
+  return upcomingHighlights(todayKey, clusterOpenHouses(instances));
 }

@@ -18,6 +18,11 @@ function footer(props) {
           <li>
             <a href="#week">Calendar</a>
           </li>
+          {props.showOpenHouse ? (
+            <li>
+              <a href="#open-house">Open house</a>
+            </li>
+          ) : null}
           <li>
             <a href="#highlights">Highlights</a>
           </li>

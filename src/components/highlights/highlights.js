@@ -4,6 +4,7 @@ import {
   highlightKindLabel,
   isHighlightOngoing,
   parseHighlights,
+  parseOpenHouses,
   stockholmDateKey,
 } from "../../lib/highlights";
 
@@ -39,10 +40,43 @@ function HighlightCard({ highlight, ongoing, onOpen }) {
   );
 }
 
-function HighlightsSection() {
+function CategorySection({ id, className, kicker, title, intro, status, items, todayKey, onOpen }) {
+  if (status === "ready" && items.length === 0) {
+    return null;
+  }
+
+  return (
+    <section className={className} id={id}>
+      <div className="title text-center">
+        <p>{kicker}</p>
+        <h1>{title}</h1>
+      </div>
+      <p className="highlights-intro">{intro}</p>
+      <div className="container">
+        {status === "loading" ? (
+          <p className="highlights-status">Loading…</p>
+        ) : (
+          <ul className="highlights-grid">
+            {items.map((highlight) => (
+              <HighlightCard
+                key={highlight.id}
+                highlight={highlight}
+                ongoing={isHighlightOngoing(highlight, todayKey)}
+                onOpen={onOpen}
+              />
+            ))}
+          </ul>
+        )}
+      </div>
+    </section>
+  );
+}
+
+function HighlightsSection({ onOpenHouseChange }) {
   const dialogRef = useRef(null);
   const titleId = useId();
-  const [items, setItems] = useState([]);
+  const [openHouses, setOpenHouses] = useState([]);
+  const [festivals, setFestivals] = useState([]);
   const [status, setStatus] = useState("loading");
   const [active, setActive] = useState(null);
   const [todayKey, setTodayKey] = useState(() => stockholmDateKey());
@@ -63,13 +97,17 @@ function HighlightsSection() {
       })
       .then((ics) => {
         if (!cancelled) {
-          setItems(parseHighlights(ics));
+          const houses = parseOpenHouses(ics);
+          setOpenHouses(houses);
+          setFestivals(parseHighlights(ics));
           setStatus("ready");
+          onOpenHouseChange?.(houses.length > 0);
         }
       })
       .catch(() => {
         if (!cancelled) {
           setStatus("error");
+          onOpenHouseChange?.(false);
         }
       });
 
@@ -93,37 +131,41 @@ function HighlightsSection() {
     }
   }, [active]);
 
-  if (status === "error" || (status === "ready" && items.length === 0)) {
+  if (
+    status === "error" ||
+    (status === "ready" && openHouses.length === 0 && festivals.length === 0)
+  ) {
     return null;
   }
 
   const activeOngoing = active ? isHighlightOngoing(active, todayKey) : false;
 
   return (
-    <section className="highlights-part" id="highlights">
-      <div className="title text-center">
-        <p>upcoming and ongoing</p>
-        <h1>Weekends &amp; festivals</h1>
-      </div>
-      <p className="highlights-intro">
-        From the calendar — festivals, weekends, and cruises.
-      </p>
-      <div className="container">
-        {status === "loading" ? (
-          <p className="highlights-status">Loading highlights…</p>
-        ) : (
-          <ul className="highlights-grid">
-            {items.map((highlight) => (
-              <HighlightCard
-                key={highlight.id}
-                highlight={highlight}
-                ongoing={isHighlightOngoing(highlight, todayKey)}
-                onOpen={setActive}
-              />
-            ))}
-          </ul>
-        )}
-      </div>
+    <>
+      {openHouses.length > 0 ? (
+        <CategorySection
+          id="open-house"
+          className="highlights-part open-house-part"
+          kicker="free to try"
+          title="Open house"
+          intro="Drop in and try a class — öppet hus from the calendar."
+          status="ready"
+          items={openHouses}
+          todayKey={todayKey}
+          onOpen={setActive}
+        />
+      ) : null}
+      <CategorySection
+        id="highlights"
+        className="highlights-part"
+        kicker="upcoming and ongoing"
+        title="Weekends & festivals"
+        intro="From the calendar — festivals, weekends, and cruises."
+        status={status}
+        items={festivals}
+        todayKey={todayKey}
+        onOpen={setActive}
+      />
 
       <dialog
         ref={dialogRef}
@@ -168,7 +210,7 @@ function HighlightsSection() {
           </>
         ) : null}
       </dialog>
-    </section>
+    </>
   );
 }
 
