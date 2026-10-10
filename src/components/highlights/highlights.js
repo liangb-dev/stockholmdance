@@ -1,4 +1,5 @@
 import React, { useEffect, useId, useRef, useState } from "react";
+import EventDialog from "../event-dialog/event-dialog";
 import {
   formatHighlightDates,
   highlightKindLabel,
@@ -167,49 +168,19 @@ function HighlightsSection({ onOpenHouseChange }) {
         onOpen={setActive}
       />
 
-      <dialog
-        ref={dialogRef}
-        className="highlight-dialog"
-        aria-labelledby={titleId}
+      <EventDialog
+        dialogRef={dialogRef}
+        titleId={titleId}
         onClose={() => setActive(null)}
-        onClick={(event) => {
-          if (event.target === event.currentTarget) {
-            event.currentTarget.close();
-          }
-        }}
-      >
-        {active ? (
-          <>
-            <div className="highlight-dialog-head">
-              <p className="highlight-meta">
-                <span>{highlightKindLabel(active.kind)}</span>
-                <span aria-hidden>·</span>
-                <time dateTime={active.startDate}>
-                  {formatHighlightDates(active)}
-                </time>
-                {activeOngoing ? <OngoingPill /> : null}
-              </p>
-              <h3 id={titleId}>{active.title}</h3>
-            </div>
-            <div className="highlight-dialog-body">
-              {active.venue ? <p className="highlight-venue">{active.venue}</p> : null}
-              <p className="highlight-description">
-                {active.description || "No extra details in the calendar entry yet."}
-              </p>
-            </div>
-            <div className="highlight-dialog-foot">
-              {active.sourceUrl ? (
-                <a href={active.sourceUrl} target="_blank" rel="noreferrer">
-                  Open source link
-                </a>
-              ) : null}
-              <button type="button" onClick={() => dialogRef.current?.close()}>
-                Close
-              </button>
-            </div>
-          </>
-        ) : null}
-      </dialog>
+        title={active?.title || ""}
+        kindLabel={active ? highlightKindLabel(active.kind) : ""}
+        tone={active?.kind || ""}
+        when={active ? formatHighlightDates(active) : ""}
+        where={active?.venue || ""}
+        ongoing={activeOngoing}
+        description={active?.description || ""}
+        sourceUrl={active?.sourceUrl || ""}
+      />
     </>
   );
 }

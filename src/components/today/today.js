@@ -1,4 +1,5 @@
 import React, { useEffect, useId, useRef, useState } from "react";
+import EventDialog from "../event-dialog/event-dialog";
 import {
   displayTitle,
   eventKind,
@@ -163,53 +164,19 @@ function TodaySection() {
         ) : null}
       </div>
 
-      <dialog
-        ref={dialogRef}
-        className="highlight-dialog"
-        aria-labelledby={titleId}
+      <EventDialog
+        dialogRef={dialogRef}
+        titleId={titleId}
         onClose={() => setActive(null)}
-        onClick={(event) => {
-          if (event.target === event.currentTarget) {
-            event.currentTarget.close();
-          }
-        }}
-      >
-        {active ? (
-          <>
-            <div className="highlight-dialog-head">
-              <p className="highlight-meta">
-                <time dateTime={active.start}>
-                  {clocks.end ? `${clocks.start}–${clocks.end}` : clocks.start}
-                </time>
-                {kind ? (
-                  <>
-                    <span aria-hidden>·</span>
-                    <span>{KIND_LABEL[kind]}</span>
-                  </>
-                ) : null}
-              </p>
-              <h3 id={titleId}>{displayTitle(active.title)}</h3>
-            </div>
-            <div className="highlight-dialog-body">
-              {active.location ? <p className="highlight-venue">{active.location}</p> : null}
-              {active.priceLabel ? <p className="today-price">{active.priceLabel}</p> : null}
-              <p className="highlight-description">
-                {active.description || "No extra details in the calendar entry yet."}
-              </p>
-            </div>
-            <div className="highlight-dialog-foot">
-              {active.sourceUrl ? (
-                <a href={active.sourceUrl} target="_blank" rel="noreferrer">
-                  Open source link
-                </a>
-              ) : null}
-              <button type="button" onClick={() => dialogRef.current?.close()}>
-                Close
-              </button>
-            </div>
-          </>
-        ) : null}
-      </dialog>
+        title={active ? displayTitle(active.title) : ""}
+        kindLabel={kind ? KIND_LABEL[kind] : ""}
+        tone={kind || ""}
+        when={clocks ? (clocks.end ? `${clocks.start}–${clocks.end}` : clocks.start) : ""}
+        where={active?.location || ""}
+        price={active?.priceLabel || ""}
+        description={active?.description || ""}
+        sourceUrl={active?.sourceUrl || ""}
+      />
     </section>
   );
 }
