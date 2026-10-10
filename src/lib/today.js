@@ -207,10 +207,112 @@ function classifyPhase(label) {
   return "other";
 }
 
+function phaseKindFromText(text) {
+  if (/social|party|socialdans|dansfest/i.test(text)) {
+    return "social";
+  }
+  if (
+    /class|drop-?in|kurs|workshop|lesson|lektion|practica|beginner|nyb[oö]rj|forts[aä]tt|footwork|partnerwork|medel|niv[aå]|level/i.test(
+      text,
+    )
+  ) {
+    return "class";
+  }
+  return "";
+}
+
+function clockToMinutes(clock) {
+  const [hours, minutes] = clock.split(":").map(Number);
+  return hours * 60 + minutes;
+}
+
+function formatMinutes(total) {
+  const minutes = ((total % (24 * 60)) + 24 * 60) % (24 * 60);
+  return `${String(Math.floor(minutes / 60)).padStart(2, "0")}:${String(minutes % 60).padStart(2, "0")}`;
+}
+
+function phaseSpan(time) {
+  const [startClock, endClock] = time.split("–");
+  const start = clockToMinutes(startClock);
+  let end = clockToMinutes(endClock);
+  if (end <= start) {
+    end += 24 * 60;
+  }
+  return { start, end };
+}
+
+function mergePhases(phases) {
+  const groups = new Map();
+  for (const phase of phases) {
+    const span = phaseSpan(phase.time);
+    const list = groups.get(phase.kind) || [];
+    list.push({ ...phase, ...span });
+    groups.set(phase.kind, list);
+  }
+
+  const merged = [];
+  for (const list of groups.values()) {
+    list.sort((a, b) => a.start - b.start);
+    let current = list[0];
+    for (const next of list.slice(1)) {
+      if (next.start <= current.end + 20) {
+        current = {
+          ...current,
+          end: Math.max(current.end, next.end),
+        };
+      } else {
+        merged.push(current);
+        current = next;
+      }
+    }
+    merged.push(current);
+  }
+
+  return pickNightPhases(merged).map((phase) => ({
+    kind: phase.kind,
+    label: phase.label,
+    time: `${formatMinutes(phase.start)}–${formatMinutes(phase.end)}`,
+  }));
+}
+
+function pickNightPhases(phases) {
+  const socials = phases.filter((phase) => phase.kind === "social");
+  const classes = phases.filter((phase) => phase.kind === "class");
+  if (socials.length === 0) {
+    return classes.sort((a, b) => a.start - b.start).slice(0, 2);
+  }
+
+  const mainSocial = socials.reduce((best, phase) =>
+    phase.end - phase.start > best.end - best.start ? phase : best,
+  );
+  const leadClass = classes
+    .filter(
+      (phase) => phase.start < mainSocial.end && phase.end >= mainSocial.start - 30,
+    )
+    .sort((a, b) => b.start - a.start)[0];
+
+  return [leadClass, mainSocial].filter(Boolean).sort((a, b) => a.start - b.start);
+}
+
 export function parseEventPhases(description) {
   const text = decodeIcsText(description);
   const phases = [];
   const seen = new Set();
+  const push = (kind, time) => {
+    if (kind !== "class" && kind !== "social") {
+      return;
+    }
+    const key = `${kind}:${time}`;
+    if (seen.has(key)) {
+      return;
+    }
+    seen.add(key);
+    phases.push({
+      kind,
+      label: kind === "class" ? "Class" : "Social",
+      time,
+    });
+  };
 
   for (const match of text.matchAll(
     /(?:^|\n)\s*(Workshops?|Class(?:es)?|Drop-?in(?:\s+kurs)?|Kurs|Social(?:dans)?|Party)\s*:\s*([^\n]+)/gi,
@@ -219,21 +321,23 @@ export function parseEventPhases(description) {
     if (!times) {
       continue;
     }
-    const kind = classifyPhase(`${match[1]} ${match[2]}`);
-    const time = `${normalizeClock(times[1])}–${normalizeClock(times[2])}`;
-    const key = `${kind}:${time}`;
-    if (seen.has(key)) {
-      continue;
-    }
-    seen.add(key);
-    phases.push({
-      kind,
-      label: kind === "class" ? "Class" : kind === "social" ? "Social" : match[1],
-      time,
-    });
+    push(
+      classifyPhase(`${match[1]} ${match[2]}`),
+      `${normalizeClock(times[1])}–${normalizeClock(times[2])}`,
+    );
   }
 
-  return phases.slice(0, 3);
+  for (const match of text.matchAll(
+    /(?:^|\n)\s*(\d{1,2}[:.]\d{2})\s*[–—-]\s*(\d{1,2}(?:[:.]\d{2})?)\s*[–—-]?\s*([^\n]+)/gu,
+  )) {
+    const detail = match[3].replace(/^[–—-]\s*/, "");
+    push(
+      phaseKindFromText(detail),
+      `${normalizeClock(match[1])}–${normalizeClock(match[2])}`,
+    );
+  }
+
+  return mergePhases(phases);
 }
 
 export function eventKind(title) {

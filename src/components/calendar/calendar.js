@@ -356,6 +356,16 @@ function CalendarSection() {
                                 <span className="week-event-title">
                                   {displayTitle(event.title)}
                                 </span>
+                                {event.phases.length > 0 ? (
+                                  <span className="week-event-phases">
+                                    {event.phases.map((phase, index) => (
+                                      <span key={`${phase.label}-${phase.time}`}>
+                                        {index > 0 ? " · " : ""}
+                                        {phase.label} {phase.time}
+                                      </span>
+                                    ))}
+                                  </span>
+                                ) : null}
                                 {event.location ? (
                                   <span className="week-event-venue">{event.location}</span>
                                 ) : null}
