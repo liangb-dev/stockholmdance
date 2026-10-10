@@ -299,6 +299,19 @@ export function getMondayWeek(date = new Date()) {
   );
 }
 
+export function getRemainderWeek(date = new Date()) {
+  const weekday = stockholmWeekday(date);
+  const daysUntilSunday = weekday === 0 ? 0 : 7 - weekday;
+
+  return Array.from({ length: daysUntilSunday + 1 }, (_, index) =>
+    toCalendarDay(shiftStockholmDays(date, index)),
+  );
+}
+
+export function getNextWeek(date = new Date()) {
+  return getMondayWeek(shiftStockholmDays(date, 7));
+}
+
 function toCalendarDay(dayDate) {
   const parts = calendarParts(dayDate);
   return {
@@ -337,9 +350,20 @@ export function formatMonthLabel(date = new Date()) {
 
 export function formatWeekRangeLabel(days) {
   const first = days[0]?.date;
-  const last = days[6]?.date;
+  const last = days[days.length - 1]?.date;
   if (!first || !last) {
     return "";
+  }
+
+  const end = new Intl.DateTimeFormat("en-GB", {
+    timeZone: TIMEZONE,
+    day: "numeric",
+    month: "short",
+    year: "numeric",
+  }).format(last);
+
+  if (days.length === 1) {
+    return end;
   }
 
   const start = new Intl.DateTimeFormat("en-GB", {
@@ -347,12 +371,6 @@ export function formatWeekRangeLabel(days) {
     day: "numeric",
     month: "short",
   }).format(first);
-  const end = new Intl.DateTimeFormat("en-GB", {
-    timeZone: TIMEZONE,
-    day: "numeric",
-    month: "short",
-    year: "numeric",
-  }).format(last);
 
   return `${start} – ${end}`;
 }

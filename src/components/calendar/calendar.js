@@ -15,6 +15,8 @@ import {
   formatMonthLabel,
   formatWeekRangeLabel,
   getMondayWeek,
+  getNextWeek,
+  getRemainderWeek,
   getStockholmMonth,
   parseEventsInRange,
   shiftStockholmDays,
@@ -157,7 +159,12 @@ function CalendarSection() {
   const [icsVersion, setIcsVersion] = useState(0);
   const [monthLabel, setMonthLabel] = useState(() => formatMonthLabel());
 
-  const days = useMemo(() => getMondayWeek(anchor), [anchor]);
+  const days = useMemo(() => {
+    if (stockholmDateKey(anchor) === stockholmDateKey(new Date())) {
+      return getRemainderWeek(anchor);
+    }
+    return getMondayWeek(anchor);
+  }, [anchor]);
   const todayKey = stockholmDateKey();
 
   const eventsByDay = useMemo(() => {
@@ -167,7 +174,11 @@ function CalendarSection() {
       return grouped;
     }
 
-    const weekEvents = parseEventsInRange(ics, days[0].start, days[6].end);
+    const weekEvents = parseEventsInRange(
+      ics,
+      days[0].start,
+      days[days.length - 1].end,
+    );
     for (const event of weekEvents) {
       const key = stockholmDateKey(new Date(event.start));
       if (grouped[key]) {
@@ -227,16 +238,23 @@ function CalendarSection() {
       : eventKind(active.title || active.rawTitle || "")
     : null;
 
-  const thisWeekKey = getMondayWeek(new Date())[0].key;
-  const viewingThisWeek = span === "week" && days[0].key === thisWeekKey;
-  const viewingNextWeek = span === "week" && !viewingThisWeek;
+  const now = new Date();
+  const viewingThisWeek = span === "week" && days[0].key === stockholmDateKey(now);
+  const viewingNextWeek =
+    span === "week" && days[0].key === getNextWeek(now)[0].key;
   const viewingMonth = span === "month";
 
   return (
     <section className="calendar-part" id="week">
       <div className="title text-center">
-        <p>Stockholm time · week starts Monday</p>
-        <h1>{span === "month" ? "This month on the floor" : "This week on the floor"}</h1>
+        <p>Stockholm time</p>
+        <h1>
+          {span === "month"
+            ? "This month on the floor"
+            : viewingNextWeek
+              ? "Next week on the floor"
+              : "This week on the floor"}
+        </h1>
       </div>
       <div className="container">
         {status === "error" ? (
@@ -275,9 +293,7 @@ function CalendarSection() {
                   aria-pressed={viewingNextWeek}
                   onClick={() => {
                     setSpan("week");
-                    setAnchor((current) =>
-                      shiftStockholmDays(span === "month" ? new Date() : current, 7),
-                    );
+                    setAnchor(shiftStockholmDays(new Date(), 7));
                   }}
                 >
                   Next week
