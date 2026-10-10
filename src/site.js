@@ -1,4 +1,4 @@
-export const SITE_NAME = "Stockholm Bachata & Salsa";
+export const SITE_NAME = "The Social Floor";
 export const SITE_KICKER = "This week's floor";
 export const SITE_DESCRIPTION =
   "Drop-in classes. Packed socials. Parties people stay for. Bachata, salsa, and kizomba across the city — one calendar, less event-hunting.";

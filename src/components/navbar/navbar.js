@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
+import { SITE_NAME } from "../../site";
 
 function Navbar(props) {
   const [open, setOpen] = useState(false);
@@ -50,7 +51,7 @@ function Navbar(props) {
       <nav className="navbar navbar-expand-lg" id="home" ref={navRef}>
         <div className="container">
           <a className="navbar-brand" href="#home">
-            <img src={props.logo} alt="Stockholm Bachata & Salsa" />
+            <img src={props.logo} alt={SITE_NAME} />
           </a>
           <button
             className="navbar-toggler"

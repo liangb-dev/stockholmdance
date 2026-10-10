@@ -20,7 +20,7 @@ const bgimg = {
 
 const bannerText = {
   subHeading: "This week's floor",
-  heading: "Stockholm Bachata & Salsa",
+  heading: "The Social Floor",
   details:
     "Drop-in classes. Packed socials. Parties people stay for. Bachata, salsa, and kizomba — one public calendar.",
 };
