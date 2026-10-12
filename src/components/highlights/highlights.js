@@ -177,6 +177,7 @@ function HighlightsSection({ onOpenHouseChange }) {
         tone={active?.kind || ""}
         when={active ? formatHighlightDates(active) : ""}
         where={active?.venue || ""}
+        mapsQuery={active?.mapsQuery || ""}
         ongoing={activeOngoing}
         description={active?.description || ""}
         sourceUrl={active?.sourceUrl || ""}

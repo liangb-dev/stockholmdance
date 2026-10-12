@@ -397,6 +397,7 @@ function CalendarSection() {
         tone={kind || ""}
         when={clocks ? (clocks.end ? `${clocks.start}–${clocks.end}` : clocks.start) : ""}
         where={active?.location || ""}
+        mapsQuery={active?.mapsQuery || ""}
         price={active?.priceLabel || ""}
         description={active?.description || ""}
         sourceUrl={active?.sourceUrl || ""}

@@ -1,5 +1,10 @@
 import React from "react";
-import { descriptionPrice, layoutDescription, sourceHost } from "../../lib/event-details";
+import {
+  descriptionPrice,
+  googleMapsUrl,
+  layoutDescription,
+  sourceHost,
+} from "../../lib/event-details";
 
 function RichText({ text }) {
   const parts = text.split(/(https?:\/\/[^\s]+)/g);
@@ -115,14 +120,16 @@ function EventDialog({
   tone,
   when,
   where,
+  mapsQuery,
   price,
   ongoing,
   description,
   sourceUrl,
 }) {
   const priceLabel = price || descriptionPrice(description || "");
+  const mapsHref = googleMapsUrl(mapsQuery);
   const facts = [
-    where ? { label: "Where", value: where } : null,
+    where ? { label: "Where", value: where, href: mapsHref } : null,
     priceLabel ? { label: "Price", value: priceLabel } : null,
   ].filter(Boolean);
   const host = sourceUrl ? sourceHost(sourceUrl) : "";
@@ -179,7 +186,24 @@ function EventDialog({
               {facts.map((fact) => (
                 <div key={fact.label} className="event-fact">
                   <dt>{fact.label}</dt>
-                  <dd>{fact.value}</dd>
+                  <dd>
+                    {fact.href ? (
+                      <a
+                        className="event-fact-map"
+                        href={fact.href}
+                        target="_blank"
+                        rel="noreferrer"
+                        aria-label={`Open ${fact.value} in Google Maps`}
+                      >
+                        <span className="event-map-name">{fact.value}</span>
+                        <span className="event-map-cue" aria-hidden="true">
+                          Map
+                        </span>
+                      </a>
+                    ) : (
+                      fact.value
+                    )}
+                  </dd>
                 </div>
               ))}
             </dl>

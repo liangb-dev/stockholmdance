@@ -89,6 +89,17 @@ export function descriptionPrice(text) {
   return "";
 }
 
+export function googleMapsUrl(query) {
+  const cleaned = String(query || "")
+    .replace(/\s*\([^)]*\)/g, "")
+    .replace(/\s+/g, " ")
+    .trim();
+  if (!cleaned) {
+    return "";
+  }
+  return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(cleaned)}`;
+}
+
 export function sourceHost(url) {
   try {
     return new URL(url).hostname.replace(/^www\./, "");

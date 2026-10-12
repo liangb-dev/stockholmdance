@@ -265,9 +265,12 @@ function eventProp(block, name) {
   return match ? { params: match[1] || "", value: match[2] || "" } : null;
 }
 
+function fullLocation(value) {
+  return decodeIcsText(value).replace(/\s+/g, " ").trim();
+}
+
 function shortLocation(value) {
-  const firstPart = decodeIcsText(value).split(",")[0]?.trim() ?? "";
-  return firstPart.replace(/\s+/g, " ");
+  return fullLocation(value).split(",")[0]?.trim() ?? "";
 }
 
 function addMonths(date, months) {
@@ -338,6 +341,7 @@ export function parseHighlights(ics, now = new Date()) {
       startDate: stockholmDateKey(startParsed.date),
       endDate: inclusiveEndDateKey(startParsed.date, endParsed.date),
       venue: shortLocation(eventProp(block, "LOCATION")?.value || ""),
+      mapsQuery: fullLocation(eventProp(block, "LOCATION")?.value || ""),
       blurb: highlightBlurb(description),
       description,
       sourceUrl: parseSourceUrl(rawDescription),
@@ -430,9 +434,13 @@ function clusterOpenHouses(items) {
 
   return clusters.map((cluster) => {
     const venues = [];
+    const queries = [];
     for (const item of cluster) {
       if (item.venue && !venues.includes(item.venue)) {
         venues.push(item.venue);
+      }
+      if (item.mapsQuery && !queries.includes(item.mapsQuery)) {
+        queries.push(item.mapsQuery);
       }
     }
 
@@ -460,6 +468,7 @@ function clusterOpenHouses(items) {
       startDate: cluster[0].startDate,
       endDate,
       venue: venues.join(" · "),
+      mapsQuery: queries.length === 1 ? queries[0] : "",
       blurb: highlightBlurb(cluster[0].description),
       description,
       sourceUrl: cluster.find((item) => item.sourceUrl)?.sourceUrl || "",
@@ -522,6 +531,7 @@ export function parseOpenHouses(ics, now = new Date()) {
       startDate: stockholmDateKey(startParsed.date),
       endDate: inclusiveEndDateKey(startParsed.date, endParsed.date),
       venue: shortLocation(eventProp(block, "LOCATION")?.value || ""),
+      mapsQuery: fullLocation(eventProp(block, "LOCATION")?.value || ""),
       description: cleanEventDescription(rawDescription),
       sourceUrl: parseSourceUrl(rawDescription),
     });
