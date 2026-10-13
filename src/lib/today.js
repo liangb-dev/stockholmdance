@@ -151,9 +151,12 @@ function parseDateValue(params, raw) {
   };
 }
 
+function fullLocation(value) {
+  return decodeIcsText(value).replace(/\s+/g, " ").trim();
+}
+
 function shortLocation(value) {
-  const firstPart = decodeIcsText(value).split(",")[0]?.trim() ?? "";
-  return firstPart.replace(/\s+/g, " ");
+  return fullLocation(value).split(",")[0]?.trim() ?? "";
 }
 
 function kr(amount) {
@@ -539,6 +542,7 @@ function toEventRecord({
   uid,
   summary,
   location,
+  mapsQuery,
   start,
   end,
   isAllDay,
@@ -549,6 +553,7 @@ function toEventRecord({
     id: `${uid}-${start.getTime()}`,
     title: summary,
     location,
+    mapsQuery,
     start: start.toISOString(),
     end: end.toISOString(),
     isAllDay,
@@ -598,13 +603,16 @@ export function parseEventsInRange(ics, from, to) {
 
     const rrule = eventProp(block, "RRULE")?.value || "";
     const uid = eventProp(block, "UID")?.value || summary;
-    const location = shortLocation(eventProp(block, "LOCATION")?.value || "");
+    const rawLocation = eventProp(block, "LOCATION")?.value || "";
+    const location = shortLocation(rawLocation);
+    const mapsQuery = fullLocation(rawLocation);
     const rawDescription = eventProp(block, "DESCRIPTION")?.value || "";
     const push = (start, end, isRecurring) => {
       const record = toEventRecord({
         uid,
         summary,
         location,
+        mapsQuery,
         start,
         end,
         isAllDay: startParsed.allDay,
@@ -713,6 +721,7 @@ export function toScheduleXEvents(events) {
         id: String(event.id).replace(/[^a-zA-Z0-9_-]/g, "_"),
         title: displayTitle(event.title),
         location: event.location,
+        mapsQuery: event.mapsQuery,
         description: event.description,
         calendarId: kind,
         sourceUrl: event.sourceUrl,
