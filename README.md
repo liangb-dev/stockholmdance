@@ -9,4 +9,4 @@ npm install
 npm run dev
 ```
 
-Open [http://localhost:5180](http://localhost:5180). The calendar feed is proxied from Google ICS at `/api/calendar.ics`.
+Open [http://localhost:5180](http://localhost:5180). The calendar feed is proxied from Google ICS at `/api/calendar.ics`. On Vercel, `/api/calendar.ics` is rewritten to `/api/calendar`.
