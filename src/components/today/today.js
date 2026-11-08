@@ -1,5 +1,8 @@
 import React, { useEffect, useId, useRef, useState } from "react";
 import EventDialog from "../event-dialog/event-dialog";
+import FeedStatus from "../feed-status/feed-status";
+import { todayPresentation } from "../../lib/calendar-feed";
+import { useCalendarFeed } from "../../lib/use-calendar-feed";
 import {
   displayTitle,
   eventKind,
@@ -80,36 +83,13 @@ function EventGroup({ title, events, onOpen }) {
 function TodaySection() {
   const dialogRef = useRef(null);
   const titleId = useId();
-  const [payload, setPayload] = useState(null);
-  const [status, setStatus] = useState("loading");
+  const feed = useCalendarFeed();
   const [active, setActive] = useState(null);
-
-  useEffect(() => {
-    let cancelled = false;
-
-    fetch("/api/calendar.ics")
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error("feed");
-        }
-        return response.text();
-      })
-      .then((ics) => {
-        if (!cancelled) {
-          setPayload(parseTodaysEvents(ics));
-          setStatus("ready");
-        }
-      })
-      .catch(() => {
-        if (!cancelled) {
-          setStatus("error");
-        }
-      });
-
-    return () => {
-      cancelled = true;
-    };
-  }, []);
+  const parsed =
+    (feed.status === "ready" || feed.status === "stale") && feed.body
+      ? parseTodaysEvents(feed.body)
+      : null;
+  const presentation = todayPresentation(feed.status, parsed?.events.length ?? 0);
 
   useEffect(() => {
     const dialog = dialogRef.current;
@@ -126,8 +106,8 @@ function TodaySection() {
   }, [active]);
 
   const grouped = { now: [], upcoming: [], past: [] };
-  if (payload) {
-    for (const event of payload.events) {
+  if (parsed && presentation.events) {
+    for (const event of parsed.events) {
       grouped[eventStatus(event)].push(event);
     }
   }
@@ -138,24 +118,29 @@ function TodaySection() {
   return (
     <section className="today-part" id="today">
       <div className="title text-center">
-        <p>{payload ? payload.label : "Stockholm time"}</p>
-        <h1>Today on the floor</h1>
+        <p>{parsed ? parsed.label : "Stockholm time"}</p>
+        <h1 id="today-heading" className="feed-heading" tabIndex={-1}>
+          Today on the floor
+        </h1>
       </div>
       <div className="container">
-        {status === "loading" ? (
-          <p className="today-status">Loading today’s events…</p>
+        {presentation.notice ? (
+          <FeedStatus
+            notice={presentation.notice}
+            reason={feed.reason}
+            refreshing={feed.refreshing}
+            onRetry={feed.retry}
+            headingId="today-heading"
+            retryLabel="Try loading today’s events again"
+            alert
+          />
         ) : null}
-        {status === "error" ? (
-          <p className="today-status">
-            Could not load today’s events. Check the week view below.
-          </p>
-        ) : null}
-        {status === "ready" && payload.events.length === 0 ? (
+        {presentation.empty ? (
           <p className="today-status">
             Quiet floor tonight. Check the week view below.
           </p>
         ) : null}
-        {status === "ready" && payload.events.length > 0 ? (
+        {presentation.events ? (
           <ul className="today-groups">
             <EventGroup title="Happening now" events={grouped.now} onOpen={setActive} />
             <EventGroup title="Coming up" events={grouped.upcoming} onOpen={setActive} />
