@@ -636,6 +636,84 @@ html {
   padding: 0;
 }
 
+.highlights-empty {
+  margin: 0;
+  text-align: center;
+  font-family: "Barlow Condensed", sans-serif;
+  font-size: 20px;
+  line-height: 1.4;
+  color: #0f2f44;
+}
+
+.highlights-see-more {
+  display: flex;
+  justify-content: center;
+  margin-top: 32px;
+}
+
+.highlights-see-more a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 44px;
+  padding: 8px 20px;
+  border: 1px solid #0f2f44;
+  border-radius: 5px;
+  background: #fff;
+  color: #0f2f44;
+  font-family: "Barlow Condensed", sans-serif;
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 1.2;
+  text-decoration: none;
+}
+
+.highlights-see-more a:hover {
+  background: #f7f4ef;
+  color: #0f2f44;
+}
+
+.highlights-see-more a:focus {
+  outline: 3px solid #0f2f44;
+  outline-offset: 3px;
+}
+
+.page-back {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  margin-top: 8px;
+  font-family: "Barlow Condensed", sans-serif;
+  font-size: 18px;
+  font-weight: 700;
+  color: #0f2f44;
+  text-decoration: none;
+}
+
+.page-back:hover {
+  color: #c2410c;
+}
+
+.page-back:focus {
+  outline: 3px solid #0f2f44;
+  outline-offset: 3px;
+}
+
+.page-weekends .navbar {
+  position: relative;
+  top: 0;
+  background: #6e06ae;
+  border-bottom: 0;
+  padding-top: 12px;
+  padding-bottom: 12px;
+}
+
+.page-weekends .highlights-part {
+  margin-top: 0;
+  border-top: 0;
+}
+
 .highlight-card {
   display: flex;
   flex-direction: column;

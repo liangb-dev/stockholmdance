@@ -50,7 +50,7 @@ function Navbar(props) {
       ) : null}
       <nav className="navbar navbar-expand-lg" id="home" ref={navRef}>
         <div className="container">
-          <a className="navbar-brand" href="#home">
+          <a className="navbar-brand" href="/#home">
             <img src={props.logo} alt={SITE_NAME} />
           </a>
           <button

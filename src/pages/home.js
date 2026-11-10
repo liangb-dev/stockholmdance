@@ -19,7 +19,7 @@ function home() {
   const [showOpenHouse, setShowOpenHouse] = useState(true);
   const links = showOpenHouse
     ? navitem
-    : navitem.filter((item) => item.link !== "#open-house");
+    : navitem.filter((item) => item.link !== "/#open-house");
 
   return (
     <div>
@@ -37,7 +37,7 @@ function home() {
       <SharedEvent />
       <TodaySection />
       <CalendarSection />
-      <HighlightsSection onOpenHouseChange={setShowOpenHouse} />
+      <HighlightsSection previewLimit={6} onOpenHouseChange={setShowOpenHouse} />
       <Footer bg={footerbg} showOpenHouse={showOpenHouse} />
     </div>
   );

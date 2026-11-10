@@ -59,13 +59,29 @@ function CategorySection({
   onRetry,
   headingId,
   retryLabel,
+  limit,
+  moreHref,
+  moreLabel,
+  backHref,
+  emptyLabel,
 }) {
-  if (!notice && items.length === 0) {
+  const visibleItems = Number.isInteger(limit) ? items.slice(0, limit) : items;
+  const hasMore = Boolean(moreHref) && visibleItems.length < items.length;
+
+  if (!notice && items.length === 0 && !emptyLabel) {
     return null;
   }
 
   return (
     <section className={className} id={id}>
+      {backHref ? (
+        <div className="container">
+          <a className="page-back" href={backHref}>
+            <span aria-hidden="true">← </span>
+            Home
+          </a>
+        </div>
+      ) : null}
       <div className="title text-center">
         <p>{kicker}</p>
         <h1 id={headingId} className="feed-heading" tabIndex={-1}>
@@ -84,9 +100,9 @@ function CategorySection({
             retryLabel={retryLabel}
           />
         ) : null}
-        {items.length > 0 ? (
+        {visibleItems.length > 0 ? (
           <ul className="highlights-grid">
-            {items.map((highlight) => (
+            {visibleItems.map((highlight) => (
               <HighlightCard
                 key={highlight.id}
                 highlight={highlight}
@@ -96,12 +112,22 @@ function CategorySection({
             ))}
           </ul>
         ) : null}
+        {!notice && visibleItems.length === 0 && emptyLabel ? (
+          <p className="highlights-empty">{emptyLabel}</p>
+        ) : null}
+        {hasMore ? (
+          <div className="highlights-see-more">
+            <a href={moreHref} aria-label={moreLabel}>
+              See more <span aria-hidden="true">→</span>
+            </a>
+          </div>
+        ) : null}
       </div>
     </section>
   );
 }
 
-function HighlightsSection({ onOpenHouseChange }) {
+function HighlightsSection({ onOpenHouseChange, previewLimit, festivalsOnly = false }) {
   const dialogRef = useRef(null);
   const titleId = useId();
   const feed = useCalendarFeed();
@@ -142,7 +168,7 @@ function HighlightsSection({ onOpenHouseChange }) {
     }
   }, [active]);
 
-  if (presentation.hidden) {
+  if (presentation.hidden && !festivalsOnly) {
     return null;
   }
 
@@ -159,7 +185,7 @@ function HighlightsSection({ onOpenHouseChange }) {
 
   return (
     <>
-      {showHouses ? (
+      {!festivalsOnly && showHouses ? (
         <CategorySection
           id="open-house"
           className="highlights-part open-house-part"
@@ -176,7 +202,7 @@ function HighlightsSection({ onOpenHouseChange }) {
       ) : null}
       <CategorySection
         id="highlights"
-        className="highlights-part"
+        className={festivalsOnly ? "highlights-part highlights-page" : "highlights-part"}
         kicker="upcoming and ongoing"
         title="Weekends & festivals"
         intro="From the calendar — festivals, weekends, cruises, and special events."
@@ -185,7 +211,12 @@ function HighlightsSection({ onOpenHouseChange }) {
         onOpen={setActive}
         headingId="highlights-heading"
         retryLabel="Try loading festivals again"
-        {...(!showHouses || festivals.length > 0 ? notice || {} : {})}
+        limit={previewLimit}
+        moreHref={previewLimit ? "/weekends" : undefined}
+        moreLabel="See more weekends and festivals"
+        backHref={festivalsOnly ? "/#home" : undefined}
+        emptyLabel={festivalsOnly ? "Nothing upcoming right now." : undefined}
+        {...(festivalsOnly || !showHouses || festivals.length > 0 ? notice || {} : {})}
       />
 
       <EventDialog

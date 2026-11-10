@@ -4,6 +4,7 @@
   "buildCommand": "npm run build",
   "outputDirectory": "dist",
   "rewrites": [
-    { "source": "/api/calendar.ics", "destination": "/api/calendar" }
+    { "source": "/api/calendar.ics", "destination": "/api/calendar" },
+    { "source": "/weekends", "destination": "/index.html" }
   ]
 }

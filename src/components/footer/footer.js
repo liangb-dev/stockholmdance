@@ -13,18 +13,18 @@ function footer(props) {
       <div className="fotermenu">
         <ul>
           <li>
-            <a href="#today">Today</a>
+            <a href="/#today">Today</a>
           </li>
           <li>
-            <a href="#week">Calendar</a>
+            <a href="/#week">Calendar</a>
           </li>
           {props.showOpenHouse ? (
             <li>
-              <a href="#open-house">Open house</a>
+              <a href="/#open-house">Open house</a>
             </li>
           ) : null}
           <li>
-            <a href="#highlights">Highlights</a>
+            <a href="/#highlights">Highlights</a>
           </li>
           <li>
             <a href={CALENDAR_SUBSCRIBE_URL} target="_blank" rel="noreferrer">
