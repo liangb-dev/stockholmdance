@@ -47,7 +47,9 @@ function EventRow({ event, onOpen }) {
           ) : null}
           <p className="today-event-meta">
             {event.location ? <span>{event.location}</span> : null}
-            {event.priceLabel ? (
+            {event.affordablePriceLabel ? (
+              <span className="price-chip">{event.affordablePriceLabel}</span>
+            ) : event.priceLabel ? (
               <span className="today-price">{event.priceLabel}</span>
             ) : null}
             {kind ? (

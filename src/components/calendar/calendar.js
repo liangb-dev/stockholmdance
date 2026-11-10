@@ -350,6 +350,9 @@ function CalendarSection() {
                                 {event.location ? (
                                   <span className="week-event-venue">{event.location}</span>
                                 ) : null}
+                                {event.affordablePriceLabel ? (
+                                  <span className="price-chip">{event.affordablePriceLabel}</span>
+                                ) : null}
                               </button>
                             );
                           })

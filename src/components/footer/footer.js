@@ -15,6 +15,11 @@ function footer(props) {
           <li>
             <a href="#today">Today</a>
           </li>
+          {props.showFree ? (
+            <li>
+              <a href="#free">Free</a>
+            </li>
+          ) : null}
           <li>
             <a href="#week">Calendar</a>
           </li>

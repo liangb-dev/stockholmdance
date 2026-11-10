@@ -363,6 +363,10 @@ html {
   margin-bottom: 28px;
 }
 
+.free-part .title h1 {
+  margin-bottom: 8px;
+}
+
 .today-status {
   text-align: center;
   font-family: "Barlow Condensed", sans-serif;
@@ -518,6 +522,19 @@ html {
 .today-price {
   color: #ffa201;
   font-weight: 700;
+}
+
+.price-chip {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: #ffe169;
+  color: #0f2f44;
+  font-family: "Barlow Condensed", sans-serif;
+  font-size: 13px;
+  font-weight: 800;
+  line-height: 1.2;
 }
 
 .today-kind {
@@ -831,6 +848,7 @@ html {
 }
 
 .highlight-dialog-head .event-kind-weekend,
+.highlight-dialog-head .event-kind-special,
 .highlight-dialog-head .event-kind-other {
   color: #0f2f44;
   background: #e8eef2;

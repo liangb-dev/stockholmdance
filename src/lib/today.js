@@ -163,10 +163,49 @@ function kr(amount) {
   return `${amount} kr`;
 }
 
+const AFFORDABLE_LIMIT_KR = 80;
+
+function kronorAmounts(text) {
+  const withoutDiscounts = String(text)
+    .replace(/\b(?:student\s+)?(?:discount|rabatt)\s*\d+\s*(?:kr|SEK)\b/gi, " ")
+    .replace(/\b\d+\s*(?:kr|SEK)\s*(?:discount|rabatt)\b/gi, " ");
+  return [...withoutDiscounts.matchAll(/(\d+)\s*(?:kr|SEK)\b/gi)].map((match) => Number(match[1]));
+}
+
+export function affordablePriceLabel(description) {
+  const text = decodeIcsText(description || "");
+  const amounts = kronorAmounts(text);
+  const markedFree = /\b(?:gratis|free)\b/i.test(text);
+  if (markedFree && amounts.length === 0) {
+    return "Free";
+  }
+
+  if (amounts.length === 0) {
+    return "";
+  }
+
+  const lowest = Math.min(...amounts);
+  if (lowest >= AFFORDABLE_LIMIT_KR) {
+    return "";
+  }
+
+  const headline = parseEventPrice(description);
+  const headlineAmounts = kronorAmounts(headline);
+  if (
+    headline &&
+    headlineAmounts.length > 0 &&
+    Math.min(...headlineAmounts) === lowest
+  ) {
+    return headline;
+  }
+
+  return `From ${lowest} kr`;
+}
+
 export function parseEventPrice(description) {
   const text = decodeIcsText(description);
 
-  if (/\bfree\b/i.test(text) && !/\d+\s*(?:kr|sek)/i.test(text)) {
+  if (/\b(?:free|gratis)\b/i.test(text) && !/\d+\s*(?:kr|sek)/i.test(text)) {
     return "Free";
   }
 
@@ -559,6 +598,7 @@ function toEventRecord({
     isAllDay,
     isRecurring,
     priceLabel: parseEventPrice(rawDescription),
+    affordablePriceLabel: affordablePriceLabel(rawDescription),
     phases: parseEventPhases(rawDescription),
     sourceUrl: parseSourceUrl(rawDescription),
     description: cleanEventDescription(rawDescription),
@@ -687,6 +727,21 @@ export function parseEventsInRange(ics, from, to) {
   }
 
   return events.sort((a, b) => a.start.localeCompare(b.start));
+}
+
+export function upcomingAffordableEvents(ics, now = new Date()) {
+  const from = new Date(now.getTime() - 36 * 60 * 60 * 1000);
+  const to = new Date(now.getTime() + 21 * 24 * 60 * 60 * 1000);
+
+  return parseEventsInRange(ics, from, to).filter((event) => {
+    if (!event.affordablePriceLabel) {
+      return false;
+    }
+    if (new Date(event.end).getTime() <= now.getTime()) {
+      return false;
+    }
+    return new Date(event.start).getTime() < to.getTime();
+  });
 }
 
 export function parseTodaysEvents(ics, now = new Date()) {
