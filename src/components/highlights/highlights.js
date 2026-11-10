@@ -201,6 +201,7 @@ function HighlightsSection({ onOpenHouseChange }) {
         ongoing={activeOngoing}
         description={active?.description || ""}
         sourceUrl={active?.sourceUrl || ""}
+        shareId={active?.id || ""}
       />
     </>
   );

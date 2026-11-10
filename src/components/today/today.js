@@ -162,6 +162,7 @@ function TodaySection() {
         price={active?.priceLabel || ""}
         description={active?.description || ""}
         sourceUrl={active?.sourceUrl || ""}
+        shareId={active?.id || ""}
       />
     </section>
   );

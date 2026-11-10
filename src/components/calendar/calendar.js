@@ -382,6 +382,7 @@ function CalendarSection() {
         price={active?.priceLabel || ""}
         description={active?.description || ""}
         sourceUrl={active?.sourceUrl || ""}
+        shareId={active?.shareId || active?.id || ""}
       />
     </section>
   );

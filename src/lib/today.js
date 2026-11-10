@@ -4,7 +4,7 @@ import {
   inclusiveEndDateKey,
   parseSourceUrl,
   stockholmDateKey,
-} from "./highlights";
+} from "./highlights.js";
 
 const TIMEZONE = "Europe/Stockholm";
 const WEEKDAY = { SU: 0, MO: 1, TU: 2, WE: 3, TH: 4, FR: 5, SA: 6 };
@@ -728,6 +728,7 @@ export function toScheduleXEvents(events) {
         priceLabel: event.priceLabel,
         phases: event.phases,
         rawTitle: event.title,
+        shareId: event.id,
         _options: {
           disableDND: true,
           disableResize: true,
