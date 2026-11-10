@@ -729,21 +729,6 @@ export function parseEventsInRange(ics, from, to) {
   return events.sort((a, b) => a.start.localeCompare(b.start));
 }
 
-export function upcomingAffordableEvents(ics, now = new Date()) {
-  const from = new Date(now.getTime() - 36 * 60 * 60 * 1000);
-  const to = new Date(now.getTime() + 21 * 24 * 60 * 60 * 1000);
-
-  return parseEventsInRange(ics, from, to).filter((event) => {
-    if (!event.affordablePriceLabel) {
-      return false;
-    }
-    if (new Date(event.end).getTime() <= now.getTime()) {
-      return false;
-    }
-    return new Date(event.start).getTime() < to.getTime();
-  });
-}
-
 export function parseTodaysEvents(ics, now = new Date()) {
   const todayParts = calendarParts(now);
   const dayStart = zonedLocalToUtc(todayParts.year, todayParts.month, todayParts.day);

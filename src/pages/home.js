@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import Navbar from "../components/navbar/navbar";
 import Banner from "../components/banner/banner";
 import TodaySection from "../components/today/today";
-import AffordableSection from "../components/affordable/affordable";
 import CalendarSection from "../components/calendar/calendar";
 import HighlightsSection from "../components/highlights/highlights";
 import Footer from "../components/footer/footer";
@@ -18,16 +17,9 @@ import { FEEDBACK_EMAIL } from "../site";
 
 function home() {
   const [showOpenHouse, setShowOpenHouse] = useState(true);
-  const [showFree, setShowFree] = useState(true);
-  const links = navitem.filter((item) => {
-    if (item.link === "#open-house" && !showOpenHouse) {
-      return false;
-    }
-    if (item.link === "#free" && !showFree) {
-      return false;
-    }
-    return true;
-  });
+  const links = showOpenHouse
+    ? navitem
+    : navitem.filter((item) => item.link !== "#open-house");
 
   return (
     <div>
@@ -44,10 +36,9 @@ function home() {
       </aside>
       <SharedEvent />
       <TodaySection />
-      <AffordableSection onAvailabilityChange={setShowFree} />
       <CalendarSection />
       <HighlightsSection onOpenHouseChange={setShowOpenHouse} />
-      <Footer bg={footerbg} showOpenHouse={showOpenHouse} showFree={showFree} />
+      <Footer bg={footerbg} showOpenHouse={showOpenHouse} />
     </div>
   );
 }

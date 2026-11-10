@@ -4,7 +4,6 @@ import Background from "../../assets/images/dance/hero.jpg";
 const navitem = [
   { id: 1, name: "Home", link: "#home" },
   { id: 2, name: "Today", link: "#today" },
-  { id: 7, name: "Free", link: "#free" },
   { id: 3, name: "Calendar", link: "#week" },
   { id: 4, name: "Open house", link: "#open-house" },
   { id: 5, name: "Highlights", link: "#highlights" },

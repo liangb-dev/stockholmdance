@@ -3,7 +3,6 @@ import test from "node:test";
 import {
   affordablePriceLabel,
   parseEventPrice,
-  upcomingAffordableEvents,
 } from "./today.js";
 
 test("gratis and free with no kronor amount count as free", () => {
@@ -36,36 +35,4 @@ test("a discount or a pass-holder freebie does not make a paid night cheap", () 
 
 test("euro prices are not treated as kronor", () => {
   assert.equal(affordablePriceLabel("Saturday pass: 69€ Sunday pass: 69€"), "");
-});
-
-test("upcoming affordable events keep free and under-80 nights only", () => {
-  const ics = `BEGIN:VCALENDAR
-BEGIN:VEVENT
-UID:cheap
-DTSTART:20261112T170000Z
-DTEND:20261112T200000Z
-SUMMARY:Student social
-DESCRIPTION:Price: 50 kr
-END:VEVENT
-BEGIN:VEVENT
-UID:museum
-DTSTART:20261126T160000Z
-DTEND:20261126T190000Z
-SUMMARY:Salsa at the museum
-DESCRIPTION:Gratis.
-END:VEVENT
-BEGIN:VEVENT
-UID:paid
-DTSTART:20261112T180000Z
-DTEND:20261112T220000Z
-SUMMARY:Paid social
-DESCRIPTION:120 kr
-END:VEVENT
-END:VCALENDAR
-`;
-
-  const titles = upcomingAffordableEvents(ics, new Date("2026-11-10T12:00:00Z")).map(
-    (event) => `${event.title}:${event.affordablePriceLabel}`,
-  );
-  assert.deepEqual(titles, ["Student social:50 kr", "Salsa at the museum:Free"]);
 });
