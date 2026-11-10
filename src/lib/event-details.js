@@ -2,8 +2,10 @@ const DAY_HEADING =
   /^(Mon|Tue|Wed|Thu|Fri|Sat|Sun)\s+\d{1,2}\s+[A-Za-z]{3,}(?:\s+·\s+(.+))?$/;
 const TIME_LINE =
   /^(\d{1,2}[:.]\d{2})\s*[–—-]\s*(?:(\d{1,2}(?:[:.]\d{2})?)\s*)?[:.]?\s*(.*)$/;
-const LABEL_ONLY = /^(pass|program|källa|source|tickets?|biljetter|länk|link|info|website)\s*:?\s*$/i;
+const LABEL_ONLY = /^(källa|source|länk|link|info|website)\s*:?\s*$/i;
 const SOURCE_LINE = /^(?:källa|source|tickets?|biljetter|länk|link|info|website)\s*:/i;
+const BULLET = /^[•·∙●▪◦]\s*/;
+const SHORT_HEADING = /^[\p{L}][\p{L}\s&/+-]{0,24}$/u;
 
 function normalizeClock(raw) {
   if (!raw) {
@@ -29,40 +31,32 @@ function matchTime(line) {
 
 function parseBlocks(lines) {
   const blocks = [];
-  let textBuffer = [];
-
-  const flushText = () => {
-    const text = textBuffer.join(" ").replace(/\s+/g, " ").trim();
-    textBuffer = [];
-    if (text) {
-      blocks.push({ type: "text", text });
-    }
-  };
 
   for (const line of lines) {
     if (!line) {
-      flushText();
       continue;
     }
-    if (LABEL_ONLY.test(line) || SOURCE_LINE.test(line) || /^https?:\/\/\S+$/i.test(line)) {
-      flushText();
+
+    const bulleted = BULLET.test(line);
+    const text = line.replace(BULLET, "");
+    if (LABEL_ONLY.test(text) || SOURCE_LINE.test(text) || /^https?:\/\/\S+$/i.test(text)) {
       continue;
     }
-    const time = matchTime(line);
+
+    const time = matchTime(text);
     if (time) {
-      flushText();
       blocks.push({ type: "slot", ...time });
       continue;
     }
-    if (line.endsWith(":") && line.length < 72) {
-      flushText();
-      blocks.push({ type: "subhead", text: line.replace(/:$/, "") });
+
+    if (!bulleted && (SHORT_HEADING.test(text) || (text.endsWith(":") && text.length < 72))) {
+      blocks.push({ type: "subhead", text: text.replace(/:$/, "") });
       continue;
     }
-    textBuffer.push(line);
+
+    blocks.push({ type: "text", text });
   }
 
-  flushText();
   return blocks;
 }
 

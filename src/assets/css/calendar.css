@@ -935,10 +935,10 @@ a.event-fact-map:focus-visible .event-map-name {
 
 .event-prose,
 .event-note {
-  margin: 0 0 10px;
+  margin: 0 0 16px;
   font-family: "Barlow Condensed", sans-serif;
   font-size: 18px;
-  line-height: 1.45;
+  line-height: 1.55;
   color: #374151;
 }
 
