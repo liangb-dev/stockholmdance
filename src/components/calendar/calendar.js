@@ -24,7 +24,10 @@ import {
   toScheduleXEvents,
 } from "../../lib/today";
 import EventDialog from "../event-dialog/event-dialog";
+import FeedStatus from "../feed-status/feed-status";
 import { stockholmDateKey } from "../../lib/highlights";
+import { weekPresentation } from "../../lib/calendar-feed";
+import { useCalendarFeed } from "../../lib/use-calendar-feed";
 import { CALENDAR_SUBSCRIBE_URL } from "../../site";
 
 const KIND_LABEL = {
@@ -152,12 +155,11 @@ function MonthGrid({ ics, onEventClick, onMonthLabel }) {
 function CalendarSection() {
   const dialogRef = useRef(null);
   const titleId = useId();
-  const icsRef = useRef("");
-  const [status, setStatus] = useState("loading");
+  const feed = useCalendarFeed();
+  const presentation = weekPresentation(feed.status);
   const [active, setActive] = useState(null);
   const [anchor, setAnchor] = useState(() => new Date());
   const [span, setSpan] = useState("week");
-  const [icsVersion, setIcsVersion] = useState(0);
   const [monthLabel, setMonthLabel] = useState(() => formatMonthLabel());
 
   const days = useMemo(() => {
@@ -169,7 +171,7 @@ function CalendarSection() {
   const todayKey = stockholmDateKey();
 
   const eventsByDay = useMemo(() => {
-    const ics = icsRef.current;
+    const ics = presentation.days ? feed.body : "";
     const grouped = Object.fromEntries(days.map((day) => [day.key, []]));
     if (!ics) {
       return grouped;
@@ -187,36 +189,7 @@ function CalendarSection() {
       }
     }
     return grouped;
-  }, [days, icsVersion]);
-
-  useEffect(() => {
-    let cancelled = false;
-
-    fetch("/api/calendar.ics")
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error("feed");
-        }
-        return response.text();
-      })
-      .then((ics) => {
-        if (cancelled) {
-          return;
-        }
-        icsRef.current = ics;
-        setIcsVersion((value) => value + 1);
-        setStatus("ready");
-      })
-      .catch(() => {
-        if (!cancelled) {
-          setStatus("error");
-        }
-      });
-
-    return () => {
-      cancelled = true;
-    };
-  }, []);
+  }, [days, feed.body, presentation.days]);
 
   useEffect(() => {
     const dialog = dialogRef.current;
@@ -249,7 +222,7 @@ function CalendarSection() {
     <section className="calendar-part" id="week">
       <div className="title text-center">
         <p>Stockholm time</p>
-        <h1>
+        <h1 id="week-heading" className="feed-heading" tabIndex={-1}>
           {span === "month"
             ? "This month on the floor"
             : viewingNextWeek
@@ -258,9 +231,17 @@ function CalendarSection() {
         </h1>
       </div>
       <div className="container">
-        {status === "error" ? (
-          <p className="today-status">Could not load the week view from the calendar feed.</p>
-        ) : (
+        {presentation.notice ? (
+          <FeedStatus
+            notice={presentation.notice}
+            reason={feed.reason}
+            refreshing={feed.refreshing}
+            onRetry={feed.retry}
+            headingId="week-heading"
+            retryLabel="Try loading the week again"
+          />
+        ) : null}
+        {presentation.days ? (
           <div
             className={
               span === "month"
@@ -317,7 +298,7 @@ function CalendarSection() {
             </div>
             {span === "month" ? (
               <MonthGrid
-                ics={icsRef.current}
+                ics={feed.body}
                 onEventClick={setActive}
                 onMonthLabel={setMonthLabel}
               />
@@ -380,7 +361,7 @@ function CalendarSection() {
               </ol>
             )}
           </div>
-        )}
+        ) : null}
         <p className="calendar-subscribe">
           <a href={CALENDAR_SUBSCRIBE_URL} target="_blank" rel="noreferrer">
             Add to Google Calendar
@@ -401,6 +382,7 @@ function CalendarSection() {
         price={active?.priceLabel || ""}
         description={active?.description || ""}
         sourceUrl={active?.sourceUrl || ""}
+        shareId={active?.shareId || active?.id || ""}
       />
     </section>
   );

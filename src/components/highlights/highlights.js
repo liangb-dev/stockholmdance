@@ -1,5 +1,8 @@
 import React, { useEffect, useId, useRef, useState } from "react";
 import EventDialog from "../event-dialog/event-dialog";
+import FeedStatus from "../feed-status/feed-status";
+import { highlightsPresentation } from "../../lib/calendar-feed";
+import { useCalendarFeed } from "../../lib/use-calendar-feed";
 import {
   formatHighlightDates,
   highlightKindLabel,
@@ -41,8 +44,23 @@ function HighlightCard({ highlight, ongoing, onOpen }) {
   );
 }
 
-function CategorySection({ id, className, kicker, title, intro, status, items, todayKey, onOpen }) {
-  if (status === "ready" && items.length === 0) {
+function CategorySection({
+  id,
+  className,
+  kicker,
+  title,
+  intro,
+  items,
+  todayKey,
+  onOpen,
+  notice,
+  reason,
+  refreshing,
+  onRetry,
+  headingId,
+  retryLabel,
+}) {
+  if (!notice && items.length === 0) {
     return null;
   }
 
@@ -50,13 +68,23 @@ function CategorySection({ id, className, kicker, title, intro, status, items, t
     <section className={className} id={id}>
       <div className="title text-center">
         <p>{kicker}</p>
-        <h1>{title}</h1>
+        <h1 id={headingId} className="feed-heading" tabIndex={-1}>
+          {title}
+        </h1>
       </div>
-      <p className="highlights-intro">{intro}</p>
+      {intro ? <p className="highlights-intro">{intro}</p> : null}
       <div className="container">
-        {status === "loading" ? (
-          <p className="highlights-status">Loading…</p>
-        ) : (
+        {notice ? (
+          <FeedStatus
+            notice={notice}
+            reason={reason}
+            refreshing={refreshing}
+            onRetry={onRetry}
+            headingId={headingId}
+            retryLabel={retryLabel}
+          />
+        ) : null}
+        {items.length > 0 ? (
           <ul className="highlights-grid">
             {items.map((highlight) => (
               <HighlightCard
@@ -67,7 +95,7 @@ function CategorySection({ id, className, kicker, title, intro, status, items, t
               />
             ))}
           </ul>
-        )}
+        ) : null}
       </div>
     </section>
   );
@@ -76,46 +104,28 @@ function CategorySection({ id, className, kicker, title, intro, status, items, t
 function HighlightsSection({ onOpenHouseChange }) {
   const dialogRef = useRef(null);
   const titleId = useId();
-  const [openHouses, setOpenHouses] = useState([]);
-  const [festivals, setFestivals] = useState([]);
-  const [status, setStatus] = useState("loading");
+  const feed = useCalendarFeed();
   const [active, setActive] = useState(null);
   const [todayKey, setTodayKey] = useState(() => stockholmDateKey());
+  const readable = feed.status === "ready" || feed.status === "stale";
+  const openHouses = readable ? parseOpenHouses(feed.body) : [];
+  const festivals = readable ? parseHighlights(feed.body) : [];
+  const presentation = highlightsPresentation(feed.status, openHouses.length + festivals.length);
 
   useEffect(() => {
     setTodayKey(stockholmDateKey());
   }, []);
 
   useEffect(() => {
-    let cancelled = false;
-
-    fetch("/api/calendar.ics")
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error("feed");
-        }
-        return response.text();
-      })
-      .then((ics) => {
-        if (!cancelled) {
-          const houses = parseOpenHouses(ics);
-          setOpenHouses(houses);
-          setFestivals(parseHighlights(ics));
-          setStatus("ready");
-          onOpenHouseChange?.(houses.length > 0);
-        }
-      })
-      .catch(() => {
-        if (!cancelled) {
-          setStatus("error");
-          onOpenHouseChange?.(false);
-        }
-      });
-
-    return () => {
-      cancelled = true;
-    };
-  }, []);
+    if (feed.status === "loading") {
+      return;
+    }
+    if (feed.status === "ready" || feed.status === "stale") {
+      onOpenHouseChange?.(openHouses.length > 0);
+      return;
+    }
+    onOpenHouseChange?.(false);
+  }, [feed.status, feed.body, openHouses.length, onOpenHouseChange]);
 
   useEffect(() => {
     const dialog = dialogRef.current;
@@ -132,28 +142,36 @@ function HighlightsSection({ onOpenHouseChange }) {
     }
   }, [active]);
 
-  if (
-    status === "error" ||
-    (status === "ready" && openHouses.length === 0 && festivals.length === 0)
-  ) {
+  if (presentation.hidden) {
     return null;
   }
 
   const activeOngoing = active ? isHighlightOngoing(active, todayKey) : false;
+  const showHouses = openHouses.length > 0;
+  const notice = presentation.notice
+    ? {
+        notice: presentation.notice,
+        reason: feed.reason,
+        refreshing: feed.refreshing,
+        onRetry: feed.retry,
+      }
+    : null;
 
   return (
     <>
-      {openHouses.length > 0 ? (
+      {showHouses ? (
         <CategorySection
           id="open-house"
           className="highlights-part open-house-part"
           kicker="free to try"
           title="Open house"
           intro="Drop in and try a class — öppet hus from the calendar."
-          status="ready"
           items={openHouses}
           todayKey={todayKey}
           onOpen={setActive}
+          headingId="open-house-heading"
+          retryLabel="Try loading open houses again"
+          {...(notice || {})}
         />
       ) : null}
       <CategorySection
@@ -162,10 +180,12 @@ function HighlightsSection({ onOpenHouseChange }) {
         kicker="upcoming and ongoing"
         title="Weekends & festivals"
         intro="From the calendar — festivals, weekends, and cruises."
-        status={status}
         items={festivals}
         todayKey={todayKey}
         onOpen={setActive}
+        headingId="highlights-heading"
+        retryLabel="Try loading festivals again"
+        {...(!showHouses || festivals.length > 0 ? notice || {} : {})}
       />
 
       <EventDialog
@@ -181,6 +201,7 @@ function HighlightsSection({ onOpenHouseChange }) {
         ongoing={activeOngoing}
         description={active?.description || ""}
         sourceUrl={active?.sourceUrl || ""}
+        shareId={active?.id || ""}
       />
     </>
   );

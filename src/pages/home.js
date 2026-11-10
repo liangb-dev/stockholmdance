@@ -5,6 +5,7 @@ import TodaySection from "../components/today/today";
 import CalendarSection from "../components/calendar/calendar";
 import HighlightsSection from "../components/highlights/highlights";
 import Footer from "../components/footer/footer";
+import SharedEvent from "../components/shared-event/shared-event";
 import {
   navitem,
   image,
@@ -33,6 +34,7 @@ function home() {
           <a href={`mailto:${FEEDBACK_EMAIL}`}>get in touch</a>.
         </p>
       </aside>
+      <SharedEvent />
       <TodaySection />
       <CalendarSection />
       <HighlightsSection onOpenHouseChange={setShowOpenHouse} />

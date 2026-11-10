@@ -1,25 +1,43 @@
 import { defineConfig, transformWithEsbuild } from "vite";
 import react from "@vitejs/plugin-react";
 import { CALENDAR_ICAL_URL } from "./src/site.js";
+import { calendarProxyResult, isRefreshRequest } from "./src/lib/calendar-feed.js";
+
+function writeCalendarResult(res, result) {
+  res.statusCode = result.status;
+  for (const [key, value] of Object.entries(result.headers)) {
+    res.setHeader(key, value);
+  }
+  res.end(result.body);
+}
 
 function calendarIcsProxy() {
   return async (req, res, next) => {
-    if (req.url !== "/api/calendar.ics") {
+    const path = (req.url || "").split("?")[0];
+    if (path !== "/api/calendar.ics") {
       next();
       return;
     }
 
+    const refresh = isRefreshRequest(req.url);
     try {
       const response = await fetch(CALENDAR_ICAL_URL, {
         headers: { "User-Agent": "StockholmBachataCalendar/1.0" },
       });
       const body = await response.text();
-      res.statusCode = response.ok ? 200 : response.status;
-      res.setHeader("Content-Type", "text/calendar; charset=utf-8");
-      res.end(body);
+      writeCalendarResult(
+        res,
+        calendarProxyResult({
+          upstreamOk: response.ok,
+          upstreamBody: body,
+          refresh,
+        }),
+      );
     } catch {
-      res.statusCode = 502;
-      res.end("Calendar feed failed");
+      writeCalendarResult(
+        res,
+        calendarProxyResult({ upstreamOk: false, upstreamBody: "", refresh }),
+      );
     }
   };
 }

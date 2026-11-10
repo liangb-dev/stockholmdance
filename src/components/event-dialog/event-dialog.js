@@ -1,10 +1,11 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   descriptionPrice,
   googleMapsUrl,
   layoutDescription,
   sourceHost,
 } from "../../lib/event-details";
+import { eventShareUrl } from "../../lib/event-share";
 
 function RichText({ text }) {
   const parts = text.split(/(https?:\/\/[^\s]+)/g);
@@ -111,6 +112,56 @@ function DescriptionBody({ description }) {
   );
 }
 
+function CopyLink({ shareId }) {
+  const [copied, setCopied] = useState(false);
+  const [manualUrl, setManualUrl] = useState("");
+
+  useEffect(() => {
+    setCopied(false);
+    setManualUrl("");
+  }, [shareId]);
+
+  useEffect(() => {
+    if (!copied) {
+      return undefined;
+    }
+    const timer = window.setTimeout(() => setCopied(false), 2000);
+    return () => window.clearTimeout(timer);
+  }, [copied]);
+
+  async function onCopy() {
+    const url = eventShareUrl(shareId, window.location.href);
+    try {
+      await navigator.clipboard.writeText(url);
+      setManualUrl("");
+      setCopied(true);
+    } catch {
+      setCopied(false);
+      setManualUrl(url);
+    }
+  }
+
+  return (
+    <>
+      <button type="button" className="event-copy-link" onClick={onCopy}>
+        {copied ? "Copied" : "Copy link"}
+      </button>
+      {manualUrl ? (
+        <input
+          className="event-copy-fallback"
+          readOnly
+          value={manualUrl}
+          aria-label="Event link"
+          onFocus={(event) => event.currentTarget.select()}
+        />
+      ) : null}
+      <span className="event-copy-status" aria-live="polite">
+        {copied ? "Link copied" : ""}
+      </span>
+    </>
+  );
+}
+
 function EventDialog({
   dialogRef,
   titleId,
@@ -125,6 +176,7 @@ function EventDialog({
   ongoing,
   description,
   sourceUrl,
+  shareId,
 }) {
   const priceLabel = price || descriptionPrice(description || "");
   const mapsHref = googleMapsUrl(mapsQuery);
@@ -219,9 +271,12 @@ function EventDialog({
             ) : (
               <span />
             )}
-            <button type="button" onClick={() => dialogRef.current?.close()}>
-              Close
-            </button>
+            <div className="highlight-dialog-actions">
+              {shareId ? <CopyLink shareId={shareId} /> : null}
+              <button type="button" onClick={() => dialogRef.current?.close()}>
+                Close
+              </button>
+            </div>
           </div>
         </>
       ) : null}
