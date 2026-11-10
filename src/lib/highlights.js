@@ -1,6 +1,7 @@
 const TIMEZONE = "Europe/Stockholm";
 const HIGHLIGHT_TITLE =
-  /\b(festival|weekend|cruise|kryssning|congress|bootcamp|intensive)\b/i;
+  /\b(festival|weekend|cruise|congress|bootcamp|intensive)\b|kryssning/i;
+const SPECIAL_TITLE = /\b(party|gala|night|day|xl|anniversary)\b/i;
 const OPEN_HOUSE_TITLE = /öppet\s*hus|öppethus|open\s*house/i;
 const WEEKLY_RULE = /FREQ=WEEKLY/i;
 
@@ -59,6 +60,9 @@ export function highlightKindLabel(kind) {
   if (kind === "weekend") {
     return "Weekend";
   }
+  if (kind === "special") {
+    return "Special";
+  }
   return "Festival";
 }
 
@@ -66,12 +70,35 @@ export function isOpenHouseTitle(title) {
   return OPEN_HOUSE_TITLE.test(cleanHighlightTitle(title));
 }
 
-export function detectHighlightKind(title) {
-  if (/\b(cruise|kryssning)\b/i.test(title)) {
+function mentionsWorkshopAndSocial(text) {
+  return /\bworkshops?\b/i.test(text) && /\b(social|party)\b/i.test(text);
+}
+
+function hasWorkshopProgramme(description) {
+  return /\bworkshops\b/i.test(description) && /\b(social|party|fest)\b/i.test(description);
+}
+
+export function isSpecialEvent(title, description = "") {
+  return (
+    SPECIAL_TITLE.test(title) ||
+    mentionsWorkshopAndSocial(title) ||
+    hasWorkshopProgramme(description)
+  );
+}
+
+export function detectHighlightKind(title, description = "") {
+  const cleaned = cleanHighlightTitle(title);
+  if (/\bcruise\b|kryssning/i.test(cleaned)) {
     return "cruise";
   }
-  if (/\bweekend\b/i.test(title)) {
+  if (/\bweekend\b/i.test(cleaned)) {
     return "weekend";
+  }
+  if (HIGHLIGHT_TITLE.test(cleaned)) {
+    return "festival";
+  }
+  if (isSpecialEvent(cleaned, description)) {
+    return "special";
   }
   return "festival";
 }
@@ -153,11 +180,11 @@ export function isHighlightCandidate(input) {
   }
 
   const title = cleanHighlightTitle(input.title);
-  if (!title || isOpenHouseTitle(title)) {
+  if (!title || isOpenHouseTitle(title) || /^cancelled\b/i.test(title)) {
     return false;
   }
 
-  if (HIGHLIGHT_TITLE.test(title)) {
+  if (HIGHLIGHT_TITLE.test(title) || isSpecialEvent(title, input.description || "")) {
     return true;
   }
 
@@ -310,9 +337,13 @@ export function parseHighlights(ics, now = new Date()) {
       endParsed = { date: end, allDay: startParsed.allDay };
     }
 
+    const rawDescription = eventProp(block, "DESCRIPTION")?.value || "";
+    const description = cleanEventDescription(rawDescription);
+
     if (
       !isHighlightCandidate({
         title: summary,
+        description,
         start: startParsed.date,
         end: endParsed.date,
         rrule,
@@ -331,13 +362,10 @@ export function parseHighlights(ics, now = new Date()) {
     }
     seen.add(id);
 
-    const rawDescription = eventProp(block, "DESCRIPTION")?.value || "";
-    const description = cleanEventDescription(rawDescription);
-
     highlights.push({
       id,
       title: cleanHighlightTitle(summary),
-      kind: detectHighlightKind(summary),
+      kind: detectHighlightKind(summary, description),
       startDate: stockholmDateKey(startParsed.date),
       endDate: inclusiveEndDateKey(startParsed.date, endParsed.date),
       venue: shortLocation(eventProp(block, "LOCATION")?.value || ""),

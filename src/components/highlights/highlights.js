@@ -179,7 +179,7 @@ function HighlightsSection({ onOpenHouseChange }) {
         className="highlights-part"
         kicker="upcoming and ongoing"
         title="Weekends & festivals"
-        intro="From the calendar — festivals, weekends, and cruises."
+        intro="From the calendar — festivals, weekends, cruises, and special events."
         items={festivals}
         todayKey={todayKey}
         onOpen={setActive}
